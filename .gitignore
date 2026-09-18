@@ -2,14 +2,27 @@
 *
 
 # Allow dashboard assets and docs
+!docs/
+!docs/**
 !.gitignore
 !README.md
-!dashboard.html
+!index.html
 !dashboard.css
 !dashboard.js
 !dashboard-data.js
 !dashboard-stats.json
 !welltory-summary.json
+!directory.css
+!recent-files.json
+!agenda-reminders.json
+!downloads-feed.json
+!todo.md
+!Makefile
+!Downloads/index.html
+!Downloads/directory.css
+!Resources/calendar.ics
+!automation/
+!automation/**
 
 # Allow scripts folder
 !scripts/

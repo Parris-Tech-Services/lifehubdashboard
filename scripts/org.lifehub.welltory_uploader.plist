@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Launchd job to keep the Welltory uploader running locally on macOS -->
+  <key>Label</key>
+  <string>org.lifehub.welltory_uploader</string>
+
+  <!-- Use env to pick the user's python3 on PATH. If you use a virtualenv, update the ProgramArguments to point to the venv python. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/env</string>
+    <string>python3</string>
+    <string>/Users/REPLACE_ME/LifeHub/scripts/welltory_uploader.py</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- KeepAlive will restart the process if it exits unexpectedly -->
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/REPLACE_ME/LifeHub</string>
+
+  <key>StandardOutPath</key>
+  <string>/Users/REPLACE_ME/Library/Logs/welltory_uploader.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/REPLACE_ME/Library/Logs/welltory_uploader.err.log</string>
+
+  <!-- Limit network exposure: the uploader binds to 127.0.0.1 by default. This job only runs locally. -->
+</dict>
+</plist>

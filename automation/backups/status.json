@@ -1,0 +1,14 @@
+{
+  "lifehub-ssd": {
+    "last_backup": "2025-12-16T10:20:00+11:00",
+    "notes": "rsync to NVMe clone"
+  },
+  "icloud-drive": {
+    "last_backup": "2025-12-18T07:45:00+11:00",
+    "notes": "iCloud sync confirmed in Finder"
+  },
+  "offsite": {
+    "last_backup": "2025-10-01T18:00:00+10:00",
+    "notes": "Backblaze snapshot verified"
+  }
+}

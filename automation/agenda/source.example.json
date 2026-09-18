@@ -1,0 +1,6 @@
+{
+  "ics_url": "https://example.com/path/to/calendar.ics",
+  "headers": {
+    "Authorization": "Bearer YOUR_TOKEN_HERE"
+  }
+}

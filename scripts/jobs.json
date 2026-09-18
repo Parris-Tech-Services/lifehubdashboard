@@ -1,0 +1,4 @@
+{
+  "update_welltory": { "cmd": "python3 scripts/update_welltory_summary.py" },
+  "build_inline": { "cmd": "python3 scripts/build_dashboard_inline_data.py" }
+}

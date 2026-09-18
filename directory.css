@@ -1,0 +1,181 @@
+:root {
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  --color-bg: #f5f5f7;
+  --color-card: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #475569;
+  --color-border: rgba(15, 23, 42, 0.08);
+  --color-accent: #2563eb;
+}
+
+body {
+  margin: 0;
+  padding: 2rem clamp(1rem, 5vw, 4rem);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+header {
+  margin-bottom: 1rem;
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+}
+
+p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.breadcrumb {
+  margin-bottom: 1.5rem;
+  color: var(--color-muted);
+}
+
+.breadcrumb a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.directory-showcase,
+.file-section {
+  background: var(--color-card);
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.directory-card {
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  padding: 1rem;
+  background: hsl(var(--accent-hue, 220), 75%, 96%);
+  box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+}
+
+.directory-hero {
+  width: 100%;
+  height: 140px;
+  border-radius: 0.85rem;
+  margin-bottom: 0.75rem;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.directory-hero.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(15, 23, 42, 0.06),
+    rgba(15, 23, 42, 0.06) 10px,
+    rgba(15, 23, 42, 0.12) 10px,
+    rgba(15, 23, 42, 0.12) 20px
+  );
+}
+
+.directory-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.directory-chip {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+  font-weight: 600;
+}
+
+.directory-card h3 {
+  margin: 0.5rem 0;
+}
+
+.directory-card p {
+  margin: 0;
+}
+
+.directory-preview {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.directory-preview li {
+  background: rgba(15, 23, 42, 0.08);
+  border-radius: 0.6rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.empty {
+  margin: 0.75rem 0;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.file-section {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+
+td a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+tr:hover td {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+footer {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+code {
+  background: rgba(15, 23, 42, 0.08);
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.4rem;
+}

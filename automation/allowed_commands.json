@@ -1,0 +1,8 @@
+[
+  { "command": "python3 LifeHub/scripts/sweep_downloads.py" },
+  { "command": "python3 LifeHub/scripts/update_dashboard_stats.py && python3 LifeHub/scripts/update_welltory_summary.py" },
+  { "command": "python3 LifeHub/scripts/generate_recent_files.py" },
+  { "command": "python3 LifeHub/scripts/move_inbox_item.py", "allowArguments": true },
+  { "command": "python3 LifeHub/scripts/move_download_item.py", "allowArguments": true },
+  { "command": "bash scripts/start_welltory_daemon.sh" }
+]
