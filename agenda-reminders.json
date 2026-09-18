@@ -1,0 +1,14 @@
+{
+  "reminders": [
+    {
+      "title": "Inbox sweep",
+      "notes": "File the 4 receipts waiting for reimbursement",
+      "priority": "high"
+    },
+    {
+      "title": "Send Welltory export",
+      "notes": "Export last week's data before Sunday",
+      "priority": "medium"
+    }
+  ]
+}

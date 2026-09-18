@@ -1,8 +1,16 @@
 {
-  "sourceFile": "WELLTORY_MEASUREMENT_DATA_EXPORT_15 Jun 2025, 12_00 AM-15 Jun 2025, 12_00 AM (6).csv",
-  "latestMeasurement": "2025-06-15 21:46",
-  "measurementCount": 31,
-  "stressAverage": 37.8,
-  "energyAverage": 60.5,
-  "focusAverage": 68.4
+  "sourceFile": "WELLTORY_MEASUREMENT_DATA_EXPORT_sample.csv",
+  "latestMeasurement": "2025-12-11T20:42:45",
+  "measurementCount": 30,
+  "stressAverage": 38.3,
+  "energyAverage": 65.3,
+  "focusAverage": 72.3,
+  "previousMeasurement": "2025-12-11T20:42:45",
+  "deltas": {
+    "stress": 0.0,
+    "energy": 0.0,
+    "focus": 0.0,
+    "measurementCount": 0.0
+  },
+  "updatedAt": "2026-09-06T08:12:45.998453+00:00"
 }

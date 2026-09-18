@@ -1,0 +1,2 @@
+# Run the LifeHub refresh script every Friday at 9pm.
+0 21 * * 5 /bin/bash /Users/USERNAME/LifeHub/scripts/refresh_all.sh >> /Users/USERNAME/Library/Logs/lifehub-refresh.log 2>&1

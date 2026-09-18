@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LifeHub Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" style="display: none;">☰</button>
+  <nav class="side-nav" aria-label="Quick navigation">
+    <div class="side-nav-title">Jump to</div>
+    <ul>
+      <li><a href="#main-content">Overview</a></li>
+      <li><a href="#copilot-panel">Copilot</a></li>
+      <li><a href="#automation-scheduler-panel">Automation</a></li>
+      <li><a href="#health-panel">System health</a></li>
+      <li><a href="#timeline-panel">Timeline</a></li>
+      <li><a href="#recent-files-panel">Recent</a></li>
+      <li><a href="#wellbeing-widget">Wellbeing</a></li>
+      <li><a href="#resource-spotlight">Spotlight</a></li>
+      <li><a href="#playables">Playables</a></li>
+      <li><a href="#triage-panel">Inbox triage</a></li>
+      <li><a href="#downloads-panel">Downloads</a></li>
+      <li><a href="#downloads-triage-panel">Downloads triage</a></li>
+      <li><a href="#resurface-panel">Resurface</a></li>
+      <li><a href="#backup-panel">Backup</a></li>
+      <li><a href="#achievement-panel">Achievements</a></li>
+      <li><a href="#quest-panel">Quest</a></li>
+      <li><a href="#daily-mod-panel">Daily mod</a></li>
+      <li><a href="#tavern-panel">Tavern</a></li>
+      <li><a href="#dnd-tools-panel">5e tools</a></li>
+      <li><a href="#mini-adventure-panel">Mini adventure</a></li>
+      <li><a href="#text-game-panel">Text game</a></li>
+      <li><a href="#text-game-v2-panel">Text game v2</a></li>
+      <li><a href="#scratchpad-panel">Scratchpad</a></li>
+    </ul>
+  </nav>
+  <header>
+    <div>
+      <h1>LifeHub Dashboard</h1>
+      <p>Quick jump links into each LifeHub area, plus a persistent checklist so the weekly sweep is painless.</p>
+    </div>
+    <div class="actions">
+      <span class="pill">Sweep Downloads → Inbox</span>
+      <span class="pill">Tag cross-cutting topics</span>
+      <span class="pill">Quarterly archive review</span>
+      <button class="pill focus-toggle" type="button" id="focus-toggle" aria-pressed="false">
+        Focus mode: Off
+      </button>
+      <button class="pill focus-toggle kiosk-toggle" type="button" id="kiosk-toggle" aria-pressed="false">
+        Kiosk mode: Off
+      </button>
+      <button class="pill focus-toggle kiosk-toggle" type="button" id="kiosk-pause" aria-pressed="false">
+        Pause rotation
+      </button>
+      <div class="xp-badge" id="xp-badge" aria-live="polite">
+        <div class="xp-label">
+          <span id="xp-level">Lv 1</span>
+          <small id="xp-meta">0 / 100 XP</small>
+        </div>
+        <div class="xp-track" aria-hidden="true"><span id="xp-progress"></span></div>
+      </div>
+    </div>
+  </header>
+  <div class="control-bar" aria-label="Display and accessibility controls">
+      <label>
+        Theme
+        <select id="theme-select">
+          <option value="modern">Modern</option>
+          <option value="classic">Classic</option>
+          <option value="contrast">High contrast</option>
+          <option value="irish">Irish</option>
+          <option value="aussie">Aussie</option>
+          <option value="halloween">Halloween</option>
+          <option value="christmas">Christmas</option>
+          <option value="easter">Easter</option>
+        </select>
+      </label>
+    <label class="toggle-chip">
+      <input type="checkbox" id="compact-toggle" />
+      <span>Compact spacing</span>
+    </label>
+    <label class="toggle-chip">
+      <input type="checkbox" id="calm-toggle" />
+      <span>Calm mode</span>
+    </label>
+    <label class="toggle-chip">
+      <input type="checkbox" id="readable-font-toggle" />
+      <span>Readable font</span>
+    </label>
+    <label class="toggle-chip">
+      <input type="checkbox" id="shadow-toggle" />
+      <span>No shadows</span>
+    </label>
+    <label class="toggle-chip">
+      <input type="checkbox" id="confetti-toggle" checked />
+      <span>Celebrate mode</span>
+    </label>
+    <div class="control-actions">
+      <button type="button" id="settings-export" class="ghost" title="Export display/settings to JSON">Export settings</button>
+      <label class="toggle-chip" style="border-style: solid;">
+        <input type="file" id="settings-import" accept="application/json" />
+        <span>Import settings</span>
+      </label>
+      <button type="button" id="status-report-export" class="ghost" title="Export a markdown summary">Export status report</button>
+    </div>
+    <label class="toggle-chip">
+      <span>Mode</span>
+      <select id="mode-select" aria-label="Dashboard mode">
+        <option value="mixed">Mixed</option>
+        <option value="fun">Fun</option>
+        <option value="work">Work</option>
+        <option value="parenting">Parenting</option>
+      </select>
+    </label>
+  </div>
+  <div class="settings-modal" id="settings-modal" aria-hidden="true" role="dialog" aria-labelledby="settings-title">
+    <div class="settings-modal-backdrop" id="settings-backdrop"></div>
+    <div class="settings-sheet">
+      <header class="settings-sheet-header">
+        <div>
+          <p class="settings-kicker">Settings</p>
+          <h2 id="settings-title">Dashboard controls</h2>
+          <p class="task-meta">Tweak display, refresh cadence, and flavor modes.</p>
+        </div>
+        <button type="button" id="settings-close" class="ghost">Close</button>
+      </header>
+      <div class="settings-grid">
+        <section>
+          <h3>Display</h3>
+          <label class="settings-row">
+            <span>Theme</span>
+            <select id="settings-theme">
+              <option value="modern">Modern</option>
+              <option value="classic">Classic</option>
+              <option value="contrast">High contrast</option>
+            </select>
+          </label>
+          <label class="settings-row"><span>Compact spacing</span><input type="checkbox" id="settings-compact" /></label>
+          <label class="settings-row"><span>Calm mode</span><input type="checkbox" id="settings-calm" /></label>
+          <label class="settings-row"><span>Readable font</span><input type="checkbox" id="settings-readable" /></label>
+          <label class="settings-row"><span>Remove shadows</span><input type="checkbox" id="settings-shadows" /></label>
+          <label class="settings-row"><span>Pixel mode</span><input type="checkbox" id="settings-pixel" /></label>
+        </section>
+        <section>
+          <h3>Refresh cadence</h3>
+          <label class="settings-row"><span>Enable auto-refresh</span><input type="checkbox" id="settings-autorefresh-enabled" /></label>
+          <label class="settings-row">
+            <span>Interval (minutes)</span>
+            <input type="number" id="settings-autorefresh-minutes" min="1" max="60" step="1" />
+          </label>
+        </section>
+        <section>
+          <h3>Data & export</h3>
+          <p class="task-meta">Use the buttons above the dashboard to export/import all settings. Visibility controls still live in the separate Settings page.</p>
+        </section>
+      </div>
+      <div class="settings-actions">
+        <button type="button" id="settings-apply" class="primary">Save & apply</button>
+        <button type="button" id="settings-cancel" class="ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <details class="kiosk-settings" id="kiosk-settings">
+    <summary>Customize kiosk rotation</summary>
+    <div class="kiosk-settings-body">
+      <label for="kiosk-interval-input">Panel dwell time (seconds)</label>
+      <input type="number" id="kiosk-interval-input" min="5" max="60" step="1" value="8" />
+      <p>Drag the list or use the arrows to define which panels rotate in kiosk mode.</p>
+      <div class="kiosk-presets">
+        <h4>Presets</h4>
+        <div class="kiosk-preset-buttons">
+          <button type="button" data-kiosk-preset="ops">Ops sweep</button>
+          <button type="button" data-kiosk-preset="inbox">Inbox focus</button>
+          <button type="button" data-kiosk-preset="showcase">Showcase</button>
+        </div>
+        <p class="task-meta">Apply a preset, then fine-tune the order below.</p>
+      </div>
+      <ul id="kiosk-order-list" class="kiosk-order-list"></ul>
+      <button type="button" id="kiosk-settings-save">Save kiosk layout</button>
+    </div>
+  </details>
+  <main id="main-content">
+  <section class="panel npc-panel" id="npc-panel">
+    <div class="npc-header">
+      <div class="npc-avatar" id="npc-avatar" aria-hidden="true">
+        <img id="npc-avatar-img" alt="" />
+      </div>
+      <div>
+        <p class="npc-kicker">Visitor of the Day</p>
+        <h2 id="npc-name">---</h2>
+        <p class="npc-role" id="npc-role"></p>
+      </div>
+      <button type="button" class="ghost" id="npc-reroll" title="Meet another visitor">New visitor</button>
+    </div>
+    <p class="npc-quest" id="npc-quest"></p>
+    <div class="npc-details">
+      <div>
+        <p class="npc-label">Tip</p>
+        <p id="npc-tip" class="npc-value"></p>
+      </div>
+      <div>
+        <p class="npc-label">Reward</p>
+        <p id="npc-reward" class="npc-value"></p>
+        <button type="button" id="npc-claim" class="ghost small">Claim reward</button>
+      </div>
+    </div>
+    <div class="npc-chat">
+      <div class="npc-chat-controls">
+        <label class="npc-label" for="npc-groq-key">Groq API key</label>
+        <input id="npc-groq-key" type="password" placeholder="gsk_..." aria-label="Groq API key" />
+        <button type="button" id="npc-groq-save" class="ghost">Save key</button>
+      </div>
+      <label class="npc-label" for="npc-chat-input">Talk to this visitor</label>
+      <div class="npc-chat-row">
+        <input id="npc-chat-input" type="text" placeholder="Ask a question..." aria-label="Message for visitor" />
+        <button type="button" id="npc-chat-send">Send</button>
+        <button type="button" id="npc-chat-clear" class="ghost">Clear</button>
+      </div>
+      <p class="task-meta" id="npc-chat-status">Enter your Groq key to chat.</p>
+      <ol class="npc-chat-log" id="npc-chat-log" aria-live="polite">
+        <li class="task-meta">No messages yet.</li>
+      </ol>
+    </div>
+  </section>
+  <section class="utility">
+    <div class="panel search-panel">
+      <label for="search">Search folders or tags</label>
+      <input id="search" type="search" placeholder="Try: medical, invoices, tabletop…" autofocus />
+    </div>
+    <div class="panel quick-actions">
+      <h2>Quick actions</h2>
+      <div class="quick-action-grid">
+        <a class="quick-link" href="Downloads/index.html" target="_blank" rel="noopener">Open Downloads folder</a>
+        <a class="quick-link" href="Inbox/index.html" target="_blank" rel="noopener">Jump to Inbox</a>
+        <a class="quick-link" href="README.md" target="_blank" rel="noopener">View LifeHub guide</a>
+  <a class="quick-link" href="https://josh-hub-96no.vercel.app/dashboard" target="_blank" rel="noopener noreferrer" style="background:#0b7dda;color:#fff;border-radius:6px;padding:8px 10px;">Open JoshHub</a>
+        <a class="quick-link" href="https://parris-tech-app.vercel.app/" target="_blank" rel="noopener">Parris Tech App</a>
+        <a class="quick-link" href="https://parris-tech-services-app.vercel.app/" target="_blank" rel="noopener">Parris Tech Services</a>
+      <button class="quick-link secondary" type="button" id="copy-stats-command">Copy stats refresh command</button>
+    <button class="quick-link secondary" type="button" id="open-settings">Settings</button>
+      </div>
+      <!-- Quick Launch inspired by JoshHub: small actionable tiles -->
+      <h3 style="margin-top:12px;">Quick launch</h3>
+      <div class="quick-launch-grid" role="list" id="quick-launch-grid">
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-start-timer" data-id="start-timer" tabindex="0" draggable="true" href="https://timer-tab.com/" target="_blank" rel="noopener" title="Start a focused timer"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">⏱️</span><span class="label">Start timer</span></a>
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-new-note" data-id="new-note" tabindex="0" draggable="true" href="#scratchpad-panel" title="Open scratchpad"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">📝</span><span class="label">New note</span></a>
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-log-expense" data-id="log-expense" tabindex="0" draggable="true" href="Finance/index.html" target="_blank" rel="noopener" title="Log an expense"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">💳</span><span class="label">Log expense</span></a>
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-welltory" data-id="welltory" tabindex="0" draggable="true" href="#wellbeing-widget" title="Upload Welltory CSV"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">❤️‍🩹</span><span class="label">Upload Welltory</span></a>
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-inbox" data-id="inbox" tabindex="0" draggable="true" href="Inbox/index.html" target="_blank" rel="noopener" title="Open Inbox"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">📥</span><span class="label">Open Inbox</span></a>
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-downloads" data-id="downloads" tabindex="0" draggable="true" href="Downloads/index.html" target="_blank" rel="noopener" title="Open Downloads"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">📁</span><span class="label">Downloads</span></a>
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-parris-tech-app" data-id="parris-tech-app" tabindex="0" draggable="true" href="https://parris-tech-app.vercel.app/" target="_blank" rel="noopener" title="Open Parris Tech App"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">🚀</span><span class="label">Parris Tech App</span></a>
+        <a role="listitem" class="quick-launch-item" id="quicklaunch-parris-tech-services" data-id="parris-tech-services" tabindex="0" draggable="true" href="https://parris-tech-services-app.vercel.app/" target="_blank" rel="noopener" title="Open Parris Tech Services"><button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">🛠️</span><span class="label">Parris Tech Services</span></a>
+      </div>
+      <!-- Needs attention panel -->
+      <div class="needs-attention-panel" id="needs-attention" aria-live="polite">
+        <h3>Needs attention</h3>
+        <p class="task-meta">Items that need your review or fixes.</p>
+        <ul class="attention-list" id="attention-list"></ul>
+      </div>
+      <div class="custom-quick-actions">
+        <h3>Add your own quick action</h3>
+        <div class="custom-quick-row">
+          <input id="custom-quick-label" type="text" placeholder="Label (e.g., Jira board)" aria-label="Quick action label" />
+          <input id="custom-quick-url" type="url" placeholder="https:// or file path" aria-label="Link or file path" />
+          <input id="custom-quick-icon" type="text" placeholder="Icon (emoji or letter)" maxlength="3" aria-label="Icon" />
+          <input id="custom-quick-color" type="color" value="#2563eb" aria-label="Accent color" title="Accent color for the tile" />
+          <button type="button" id="custom-quick-add">Add quick action</button>
+        </div>
+        <p class="task-meta">Saved locally; added to the quick launch grid with drag + pin support.</p>
+      </div>
+      <div class="automation-trigger">
+        <p>Need to run a bigger workflow?</p>
+        <button type="button" id="open-automation-modal" class="linkish">View automation commands</button>
+      </div>
+      <p class="action-feedback" id="action-feedback" role="status" aria-live="polite"></p>
+    </div>
+    <div class="panel quest-panel" id="quest-panel">
+      <div class="quest-header">
+        <div>
+          <p class="quest-kicker">Daily quest</p>
+          <h2 id="quest-title">Loading quest…</h2>
+          <p class="quest-summary" id="quest-summary">Summoning today’s task.</p>
+        </div>
+        <span class="status-chip" id="quest-reward">Reward incoming…</span>
+      </div>
+      <div class="quest-meta">
+        <span id="quest-goal">Ready.</span>
+        <span id="quest-streak" class="quest-streak">Streak: 0</span>
+      </div>
+      <div class="quest-actions">
+        <button type="button" id="quest-complete" class="primary">Complete quest</button>
+        <button type="button" id="quest-reroll" class="ghost">Reroll today</button>
+        <button type="button" id="quest-groq-reroll" class="ghost">Groq reroll</button>
+      </div>
+    </div>
+    <div class="panel daily-mod-panel" id="daily-mod-panel">
+      <div class="daily-mod-header">
+        <div>
+          <p class="daily-mod-kicker">Daily modifiers</p>
+          <h2 id="daily-modifier-name">Rolling…</h2>
+          <p class="daily-mod-summary" id="daily-modifier-summary">A fresh twist for the day.</p>
+          <p class="task-meta" id="daily-modifier-flavor"></p>
+        </div>
+        <div class="daily-mod-actions">
+          <span class="status-chip" id="daily-modifier-meta">Rotates every 24h</span>
+          <button type="button" id="daily-modifier-reroll" class="ghost">Reroll</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel stats">
+      <dl class="stat-list">
+        <div class="stat-row">
+          <dt>Inbox items awaiting filing</dt>
+          <dd>
+            <strong data-stat="inboxCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+        <div class="stat-row">
+          <dt>Family health records</dt>
+          <dd>
+            <strong data-stat="familyHealthCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+        <div class="stat-row">
+          <dt>Finance docs</dt>
+          <dd>
+            <strong data-stat="financeCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+        <div class="stat-row">
+          <dt>Active projects (code + docs)</dt>
+          <dd>
+            <strong data-stat="projectsCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <div class="panel stats">
+      <dl class="stat-list">
+        <div class="stat-row">
+          <dt>Housing & property files</dt>
+          <dd>
+            <strong data-stat="housingCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+        <div class="stat-row">
+          <dt>Media assets</dt>
+          <dd>
+            <strong data-stat="mediaCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+        <div class="stat-row">
+          <dt>Archive entries</dt>
+          <dd>
+            <strong data-stat="archiveCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+        <div class="stat-row">
+          <dt>Templates ready</dt>
+          <dd>
+            <strong data-stat="templatesCount">--</strong>
+            <div class="stat-meter"><span></span></div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+    <div class="stat-insights">
+      <article class="stat-insight-card">
+        <span class="stat-label">Total storage</span>
+        <strong data-insight="lifehubSize">--</strong>
+        <small>LifeHub folder size</small>
+      </article>
+      <article class="stat-insight-card">
+        <span class="stat-label">Inbox change</span>
+        <strong data-insight="inboxChange">--</strong>
+        <small>Week over week</small>
+      </article>
+      <article class="stat-insight-card">
+        <span class="stat-label">Action items</span>
+        <strong data-insight="actionItems">--</strong>
+        <small>Inbox + Downloads backlog</small>
+      </article>
+    </div>
+    <div class="panel inbox-health-panel" id="inbox-health-panel">
+      <div class="inbox-health-header">
+        <h2>Inbox health</h2>
+        <p class="task-meta" id="inbox-health-summary">Tracking weekly adds vs clears.</p>
+      </div>
+      <div class="inbox-health-chart" id="inbox-health-chart" role="img" aria-label="Inbox files added versus cleared over the last four weeks"></div>
+      <p class="task-meta inbox-health-footnote">Based on dashboard stats snapshots captured during refreshes.</p>
+    </div>
+    <div class="panel today-panel" id="today-panel">
+      <div class="today-header">
+        <h2>Today</h2>
+        <span id="agenda-date">--</span>
+      </div>
+      <div class="today-content">
+        <div>
+          <h3>Calendar</h3>
+          <ul id="agenda-events" aria-live="polite"></ul>
+        </div>
+        <div>
+          <h3>Reminders</h3>
+          <ul id="agenda-reminders" aria-live="polite"></ul>
+        </div>
+        <div class="agenda-upload">
+          <h3>Calendar upload</h3>
+          <p class="task-meta">Drop a fresh .ics export here instead of copying files.</p>
+          <label class="agenda-upload-trigger">
+            <input type="file" accept=".ics,text/calendar" id="agenda-upload-input" />
+            <span>Upload .ics</span>
+          </label>
+          <button type="button" id="agenda-upload-clear" class="ghost">Clear uploaded file</button>
+          <p class="task-meta" id="agenda-upload-status">Using Resources/calendar.ics</p>
+        </div>
+      </div>
+      <p class="today-footnote" id="agenda-status">Loading agenda…</p>
+    </div>
+  </section>
+
+  <section class="panel copilot-panel" id="copilot-panel" data-kiosk-highlight="search">
+    <div class="copilot-header">
+      <div>
+        <h2>LifeHub Copilot</h2>
+        <p>Ask in everyday language and Copilot will search folders, tags, and recent files for you.</p>
+      </div>
+      <span class="copilot-hint">Shortcuts: <code>/</code> search • <code>⌘T</code> triage • <code>⌘S</code> search • <code>⌘R</code> refresh • <code>?</code> help</span>
+    </div>
+    <label for="copilot-input" class="visually-hidden">Ask Copilot</label>
+    <div class="copilot-input-row">
+      <input id="copilot-input" type="text" placeholder="e.g., show medical invoices from 2024" autocomplete="off" />
+      <button type="button" id="copilot-clear" class="ghost">Clear</button>
+    </div>
+    <p class="task-meta">Copilot understands folder names, tags (health, finance, projects), or actions ("copy downloads command").</p>
+    <ol id="copilot-results" class="copilot-results" aria-live="polite"></ol>
+  </section>
+
+  <section class="panel achievement-panel" id="achievement-panel">
+    <div class="achievement-header">
+      <div>
+        <p class="achievement-kicker">Achievements</p>
+        <h2>LifeHub badges</h2>
+        <p class="task-meta">Earn badges for refreshes, inbox victories, and triage runs.</p>
+      </div>
+      <span class="status-chip" id="achievement-summary">Tracking…</span>
+    </div>
+    <div class="achievement-featured" id="achievement-featured" aria-live="polite">
+      <div class="featured-badge">
+        <div class="featured-icon">🏅</div>
+        <div>
+          <p class="task-meta">Featured badges</p>
+          <strong>Loading highlights…</strong>
+          <span class="status-chip">Checking progress</span>
+        </div>
+      </div>
+    </div>
+    <ol class="achievement-list" id="achievement-list" aria-live="polite">
+      <li>Loading badges…</li>
+    </ol>
+  </section>
+
+  <section class="panel tavern-panel" id="tavern-panel">
+    <div class="tavern-header">
+      <div>
+        <p class="tavern-kicker">Tavern talk</p>
+        <h2>Rotating banter</h2>
+        <p class="task-meta">Flavor lines and hints for your sweep.</p>
+      </div>
+      <div class="tavern-actions">
+        <button type="button" id="tavern-prev" class="ghost">Prev</button>
+        <button type="button" id="tavern-next">Next</button>
+      </div>
+    </div>
+    <blockquote class="tavern-line" id="tavern-line">Pulling up tavern tales…</blockquote>
+    <p class="task-meta" id="tavern-meta">Rotates every few seconds.</p>
+  </section>
+
+  <section class="panel dnd-tools-panel" id="dnd-tools-panel">
+      <div class="dnd-tools-header">
+        <div>
+          <p class="dnd-kicker">5e tools</p>
+          <h2>Skill checks & saves</h2>
+          <p class="task-meta">Roll d20s with ability mods and DC targets.</p>
+        </div>
+        <div class="dnd-abilities">
+        <label>STR <input type="number" id="dnd-str" value="2" step="1" /></label>
+        <label>DEX <input type="number" id="dnd-dex" value="2" step="1" /></label>
+        <label>CON <input type="number" id="dnd-con" value="2" step="1" /></label>
+        <label>INT <input type="number" id="dnd-int" value="0" step="1" /></label>
+        <label>WIS <input type="number" id="dnd-wis" value="1" step="1" /></label>
+        <label>CHA <input type="number" id="dnd-cha" value="0" step="1" /></label>
+        <label>Prof <input type="number" id="dnd-prof" value="2" step="1" /></label>
+      </div>
+      </div>
+    <div class="dnd-roll-row">
+      <label>
+        Check
+        <select id="dnd-check-type">
+          <option value="STR">Strength</option>
+          <option value="DEX">Dexterity</option>
+          <option value="CON">Constitution</option>
+          <option value="INT">Intelligence</option>
+          <option value="WIS">Wisdom</option>
+          <option value="CHA">Charisma</option>
+        </select>
+      </label>
+      <label>
+        Skill (auto ability)
+        <select id="dnd-skill">
+          <option value="">-- none --</option>
+          <option value="acrobatics">Acrobatics (DEX)</option>
+          <option value="animal">Animal Handling (WIS)</option>
+          <option value="arcana">Arcana (INT)</option>
+          <option value="athletics">Athletics (STR)</option>
+          <option value="deception">Deception (CHA)</option>
+          <option value="history">History (INT)</option>
+          <option value="insight">Insight (WIS)</option>
+          <option value="intimidation">Intimidation (CHA)</option>
+          <option value="investigation">Investigation (INT)</option>
+          <option value="medicine">Medicine (WIS)</option>
+          <option value="nature">Nature (INT)</option>
+          <option value="perception">Perception (WIS)</option>
+          <option value="performance">Performance (CHA)</option>
+          <option value="persuasion">Persuasion (CHA)</option>
+          <option value="religion">Religion (INT)</option>
+          <option value="sleight">Sleight of Hand (DEX)</option>
+          <option value="stealth">Stealth (DEX)</option>
+          <option value="survival">Survival (WIS)</option>
+        </select>
+      </label>
+      <div class="dnd-skill-toggles">
+        <label class="toggle-chip">
+          <input type="checkbox" id="dnd-skill-prof" />
+          <span>Proficient</span>
+        </label>
+        <label class="toggle-chip">
+          <input type="checkbox" id="dnd-skill-expert" />
+          <span>Expertise</span>
+        </label>
+      </div>
+      <label>
+        DC
+        <input type="number" id="dnd-dc" value="12" min="1" max="30" />
+      </label>
+      <button type="button" id="dnd-roll">Roll</button>
+      <button type="button" id="dnd-adv" class="ghost">Advantage</button>
+      <button type="button" id="dnd-dis" class="ghost">Disadvantage</button>
+      <div class="dnd-pools">
+        <label class="toggle-chip pool-chip">
+          <input type="checkbox" id="dnd-inspiration" />
+          <span>Use Inspiration</span>
+        </label>
+        <div class="pool-row">
+          <label>Pool<input type="number" id="dnd-insp-pool" min="0" value="0" /></label>
+          <button type="button" class="ghost" id="dnd-insp-add">+1</button>
+        </div>
+        <label class="toggle-chip pool-chip">
+          <input type="checkbox" id="dnd-bardic" />
+          <span>Use Bardic</span>
+        </label>
+        <div class="pool-row">
+          <label>Dice<input type="number" id="dnd-bardic-pool" min="0" value="0" /></label>
+          <select id="dnd-bardic-die">
+            <option value="6">d6</option>
+            <option value="8">d8</option>
+            <option value="10">d10</option>
+            <option value="12">d12</option>
+          </select>
+          <button type="button" class="ghost" id="dnd-bardic-add">+1</button>
+        </div>
+      </div>
+      <button type="button" id="dnd-clear" class="ghost">Clear log</button>
+    </div>
+    <ol class="dice-log" id="dnd-log" aria-live="polite">
+      <li>Ready for a check.</li>
+    </ol>
+    <div class="character-card" id="character-card">
+      <div>
+        <p class="dnd-kicker">Character</p>
+        <h3 id="character-name">Unassigned</h3>
+        <p class="task-meta" id="character-lineage">Race / Class</p>
+        <p class="task-meta" id="character-notes">Background: —</p>
+      </div>
+      <div class="character-meta">
+        <span class="pill" id="character-level">Lv 1</span>
+        <button type="button" class="ghost" id="character-edit">Edit</button>
+      </div>
+    </div>
+    <div class="inventory-panel" id="inventory-panel">
+      <div class="inventory-header">
+        <div>
+          <p class="dnd-kicker">Inventory</p>
+          <h3>Magic items & gear</h3>
+          <p class="task-meta">Attune up to three; add from NPC rewards or manually.</p>
+        </div>
+      </div>
+      <div class="inventory-add">
+        <input type="text" id="inv-name" placeholder="Item name (e.g., Moon-Touched Sword)" />
+        <select id="inv-type">
+          <option value="item">Item</option>
+          <option value="weapon">Weapon</option>
+          <option value="armor">Armor</option>
+        </select>
+        <select id="inv-rarity">
+          <option value="common">Common</option>
+          <option value="uncommon">Uncommon</option>
+          <option value="rare">Rare</option>
+          <option value="very-rare">Very rare</option>
+          <option value="legendary">Legendary</option>
+        </select>
+        <input type="text" id="inv-notes" placeholder="Notes (e.g., +1 to hit)" />
+        <button type="button" id="inv-add">Add item</button>
+      </div>
+      <div class="inventory-list" id="inventory-list">
+        <p class="task-meta">No items yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="settings-modal" id="character-modal" aria-hidden="true" role="dialog" aria-labelledby="character-title">
+    <div class="settings-modal-backdrop" id="character-backdrop"></div>
+    <div class="settings-sheet">
+      <header class="settings-sheet-header">
+        <div>
+          <p class="settings-kicker">Character</p>
+          <h2 id="character-title">Create your hero</h2>
+          <p class="task-meta">Name, race, class, and a note. Level is driven by your XP.</p>
+        </div>
+        <button type="button" id="character-close" class="ghost">Close</button>
+      </header>
+      <div class="settings-grid">
+        <label class="settings-row">
+          <span>Name</span>
+          <input type="text" id="char-name-input" placeholder="E.g., Aria" />
+        </label>
+        <label class="settings-row">
+          <span>Race</span>
+          <select id="char-race-input">
+            <option value="">Pick a lineage</option>
+            <option>Human</option>
+            <option>Elf</option>
+            <option>Dwarf</option>
+            <option>Halfling</option>
+            <option>Gnome</option>
+            <option>Half-elf</option>
+            <option>Half-orc</option>
+            <option>Tiefling</option>
+            <option>Dragonborn</option>
+            <option>Custom</option>
+          </select>
+        </label>
+        <label class="settings-row">
+          <span>Class</span>
+          <select id="char-class-input">
+            <option value="">Choose a class</option>
+            <option>Barbarian</option>
+            <option>Bard</option>
+            <option>Cleric</option>
+            <option>Druid</option>
+            <option>Fighter</option>
+            <option>Monk</option>
+            <option>Paladin</option>
+            <option>Ranger</option>
+            <option>Rogue</option>
+            <option>Sorcerer</option>
+            <option>Warlock</option>
+            <option>Wizard</option>
+            <option>Artificer</option>
+            <option>Custom</option>
+          </select>
+        </label>
+        <label class="settings-row">
+          <span>Background / notes</span>
+          <textarea id="char-notes-input" rows="2" placeholder="E.g., Archivist of the Inbox, hunts goblins in Downloads."></textarea>
+        </label>
+      </div>
+      <div class="settings-actions">
+        <button type="button" id="character-save" class="primary">Save character</button>
+        <button type="button" id="character-cancel" class="ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel mini-adventure-panel" id="mini-adventure-panel">
+    <div class="mini-header">
+      <div>
+        <p class="mini-kicker">Mini adventure</p>
+        <h2>Clocktower Heist</h2>
+        <p class="task-meta">A quick choice-based run that fits inside the dashboard.</p>
+      </div>
+      <div class="mini-actions">
+        <button type="button" id="mini-start">Start</button>
+        <button type="button" id="mini-reset" class="ghost">Reset</button>
+      </div>
+    </div>
+    <div class="mini-body">
+      <p id="mini-text">Press start to begin.</p>
+      <div class="mini-choices" id="mini-choices"></div>
+    </div>
+  </section>
+
+  <section class="panel dice-panel" id="dice-panel">
+    <div class="dice-header">
+      <div>
+        <p class="dice-kicker">Dice & tables</p>
+        <h2>Rolls, encounters, loot</h2>
+        <p class="task-meta">Tiny GM tools for decisions and fun.</p>
+      </div>
+      <div class="dice-actions" id="dice-buttons">
+        <button type="button" data-die="4" class="ghost">d4</button>
+        <button type="button" data-die="6" class="ghost">d6</button>
+        <button type="button" data-die="8" class="ghost">d8</button>
+        <button type="button" data-die="10" class="ghost">d10</button>
+        <button type="button" data-die="12" class="ghost">d12</button>
+        <button type="button" data-die="20" class="ghost">d20</button>
+      </div>
+    </div>
+    <div class="dice-table-actions">
+      <button type="button" id="dice-encounter">Roll encounter</button>
+      <button type="button" id="dice-loot" class="ghost">Roll loot</button>
+      <button type="button" id="dice-clear" class="ghost">Clear log</button>
+    </div>
+    <ol class="dice-log" id="dice-log" aria-live="polite">
+      <li>Awaiting your first roll.</li>
+    </ol>
+    <div class="encounter-tracker" id="encounter-tracker">
+      <h3>Encounter tracker</h3>
+      <div class="encounter-row" data-encounter="inbox">
+        <div>
+          <strong>Inbox dragon</strong>
+          <small class="task-meta">Clear inbox tasks to slay</small>
+        </div>
+        <div class="encounter-controls">
+          <div class="encounter-bar"><span></span></div>
+          <button type="button" data-encounter-dec="inbox" class="ghost">-1</button>
+          <button type="button" data-encounter-inc="inbox" class="ghost">+1</button>
+        </div>
+      </div>
+      <div class="encounter-row" data-encounter="downloads">
+        <div>
+          <strong>Downloads goblins</strong>
+          <small class="task-meta">Process downloads to push back</small>
+        </div>
+        <div class="encounter-controls">
+          <div class="encounter-bar"><span></span></div>
+          <button type="button" data-encounter-dec="downloads" class="ghost">-1</button>
+          <button type="button" data-encounter-inc="downloads" class="ghost">+1</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel automation-scheduler" id="automation-scheduler-panel">
+    <div class="automation-scheduler-header">
+      <div>
+        <h2>Automation Scheduler</h2>
+        <p>Queue LifeHub scripts, run them as a batch, and keep the last-run log handy.</p>
+      </div>
+      <span class="status-chip" id="automation-runner-status" aria-live="polite">Runner: checking…</span>
+      <div class="automation-inline-controls">
+        <label class="toggle-chip">
+          <input type="checkbox" id="automation-dry-run" />
+          <span>Dry run (simulate)</span>
+        </label>
+        <button type="button" id="automation-run-last" class="ghost" title="Queue and run your last saved batch">Run last queue</button>
+      </div>
+      <div class="scheduler-actions">
+        <button type="button" id="automation-start" disabled>Run queue</button>
+        <button type="button" id="automation-clear" class="ghost">Clear queue</button>
+      </div>
+    </div>
+    <div class="scheduler-grid">
+      <section>
+        <h3>Available automations</h3>
+        <ul id="automation-scheduler-list" class="automation-scheduler-list"></ul>
+      </section>
+      <section>
+        <h3>Queued runs</h3>
+        <ol id="automation-queue" class="automation-queue" aria-live="polite"></ol>
+        <p id="automation-status" class="task-meta">Pick at least one automation to start a batch.</p>
+      </section>
+      <section class="automation-presets">
+        <h3>Saved routines</h3>
+        <p class="task-meta" id="automation-presets-status">Save the current queue for one-click reuse.</p>
+        <ul id="automation-presets-list" class="automation-presets-list"></ul>
+      <div class="automation-presets-form">
+        <label for="automation-preset-name">Save current queue as a preset</label>
+        <div class="automation-presets-row">
+          <input type="text" id="automation-preset-name" placeholder="e.g., Weekly sweep" />
+          <button type="button" id="automation-save-preset" disabled>Save preset</button>
+        </div>
+        <p class="task-meta">Presets append their automations to the queue in the order saved.</p>
+      </div>
+      <div class="automation-presets-form">
+        <label for="automation-preset-import">Import presets (JSON)</label>
+        <div class="automation-presets-row">
+          <input type="file" id="automation-preset-import" accept="application/json" />
+          <button type="button" id="automation-preset-export" class="ghost">Export presets</button>
+        </div>
+        <p class="task-meta">Import/export keeps your routines portable across browsers.</p>
+      </div>
+    </section>
+    <section class="scheduler-log">
+      <h3>Last run log</h3>
+      <ul id="automation-log"></ul>
+    </section>
+    </div>
+  </section>
+
+  <section class="panel health-panel" id="health-panel">
+    <div class="health-header">
+      <div>
+        <h2>System Health</h2>
+        <p>Freshness of key data sources and services.</p>
+      </div>
+      <button type="button" id="health-refresh">Refresh all</button>
+    </div>
+    <ul class="health-list" id="health-list">
+      <li>Loading health checks…</li>
+    </ul>
+  </section>
+
+  <section class="panel timeline-panel" id="timeline-panel" data-kiosk-highlight="timeline">
+    <div class="timeline-header">
+      <div>
+        <h2>Activity Timeline</h2>
+        <p>Calendar events, reminders, and file changes blended into one strip.</p>
+      </div>
+      <div class="timeline-controls">
+        <div class="timeline-filters" role="group" aria-label="Timeline filters">
+          <label><input type="checkbox" data-timeline-filter="events" checked /> Events</label>
+          <label><input type="checkbox" data-timeline-filter="reminders" checked /> Reminders</label>
+          <label><input type="checkbox" data-timeline-filter="files" checked /> Files</label>
+          <label><input type="checkbox" data-timeline-filter="downloads" checked /> Downloads</label>
+          <label><input type="checkbox" data-timeline-filter="automations" checked /> Automations</label>
+          <label><input type="checkbox" data-timeline-filter="wellbeing" checked /> Wellbeing</label>
+          <label><input type="checkbox" data-timeline-filter="backups" checked /> Backups</label>
+        </div>
+        <button type="button" id="timeline-refresh">Refresh</button>
+      </div>
+    </div>
+    <ol id="activity-timeline" class="activity-timeline" aria-live="polite"></ol>
+    <p id="timeline-empty" class="task-meta">Loading timeline…</p>
+  </section>
+
+  <section class="panel recent-files" id="recent-files-panel">
+    <div class="recent-header">
+      <div>
+        <h2>Recent Files</h2>
+        <p>Latest updates in each area (refresh for current list).</p>
+      </div>
+      <button type="button" id="recent-refresh">Refresh</button>
+    </div>
+    <div class="recent-grid" id="recent-grid" aria-live="polite"></div>
+  </section>
+
+  <section class="panel wellbeing" id="wellbeing-widget">
+    <div class="wellbeing-header">
+      <h2>Wellbeing snapshot</h2>
+      <span class="wellbeing-source" id="wellbeing-source">Latest Welltory export</span>
+    </div>
+    <p class="wellbeing-meta">Last measurement: <span id="wellbeing-latest">--</span></p>
+    <p class="wellbeing-meta" id="wellbeing-trend-summary">Waiting for previous uploads to compare trends.</p>
+    <div class="wellbeing-grid">
+      <div>
+        <span class="wellbeing-label">Stress (avg)</span>
+        <strong id="wellbeing-stress">--</strong>
+        <span class="wellbeing-delta" id="wellbeing-stress-delta">—</span>
+      </div>
+      <div>
+        <span class="wellbeing-label">Energy (avg)</span>
+        <strong id="wellbeing-energy">--</strong>
+        <span class="wellbeing-delta" id="wellbeing-energy-delta">—</span>
+      </div>
+      <div>
+        <span class="wellbeing-label">Focus (avg)</span>
+        <strong id="wellbeing-focus">--</strong>
+        <span class="wellbeing-delta" id="wellbeing-focus-delta">—</span>
+      </div>
+      <div>
+        <span class="wellbeing-label">Measurements</span>
+        <strong id="wellbeing-count">--</strong>
+        <span class="wellbeing-delta" id="wellbeing-count-delta">—</span>
+      </div>
+    </div>
+    <div class="health-snapshot" aria-hidden="false">
+      <div class="health-card">
+        <span>Sleep</span>
+        <div class="metric" id="sleep-hrs">-- hrs</div>
+        <button class="cta" id="log-sleep">Log sleep</button>
+      </div>
+      <div class="health-card">
+        <span>Movement</span>
+        <div class="metric" id="steps-count">-- steps</div>
+        <button class="cta" id="view-activity">View activity</button>
+      </div>
+      <div class="health-card">
+        <span>Nutrition</span>
+        <div class="metric" id="nutrition-score">--</div>
+        <button class="cta" id="log-nutrition">Log meal</button>
+      </div>
+      <div class="health-card">
+        <span>Latest HRV</span>
+        <div class="metric" id="latest-hrv">--</div>
+        <button class="cta" id="open-welltory-upload">Upload CSV</button>
+      </div>
+    </div>
+    <div class="wellbeing-upload" style="margin-top:12px;">
+      <h3>Import Welltory CSV</h3>
+      <p class="task-meta">Upload a Welltory export (.csv) to update the wellbeing snapshot shown above.</p>
+      <label class="welltory-upload-trigger" style="display:inline-block;">
+        <input type="file" accept=".csv,text/csv" id="welltory-upload-input" style="display:none;" />
+        <button type="button" id="welltory-upload-pick" class="ghost">Choose file…</button>
+      </label>
+      <button type="button" id="welltory-upload-button">Upload</button>
+      <p id="welltory-upload-status" class="task-meta">Uploader status: <span id="welltory-uploader-state">unknown</span></p>
+      <p class="task-meta">If the uploader isn't running, start it from the LifeHub repo:
+        <code>python3 scripts/welltory_uploader.py</code>
+      </p>
+      <!-- Modal: offer one-click copy of the start command and a download link to the .command launcher -->
+      <div id="welltory-start-modal" class="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
+        <div style="background:#fff; padding:18px; border-radius:8px; max-width:680px; width:90%;">
+          <h4>Start LifeHub local services</h4>
+          <p>To enable one-click upload, start the local uploader + static server. Use this command in Terminal or double-click the launcher file in Finder.</p>
+          <pre id="welltory-start-cmd" style="background:#f3f3f3; padding:8px; border-radius:4px;">bash "~/LifeHub/scripts/start_welltory_local.sh"</pre>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="welltory-copy-cmd">Copy command</button>
+            <a id="welltory-download-launcher" href="scripts/start_welltory_local.command" download>Download launcher</a>
+            <a id="welltory-download-installer" href="scripts/install_welltory_uploader.command" download style="display:none;">Installer</a>
+            <button id="welltory-install-btn">Download & install uploader</button>
+            <button id="welltory-start-close" class="ghost">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel checklist">
+    <h2>Weekly LifeHub Routine</h2>
+    <div class="checklist-tabs" role="tablist" aria-label="Checklist cadence">
+      <button type="button" class="tab active" data-cadence-tab="All" role="tab" id="cadence-tab-all" aria-selected="true" aria-controls="task-panel">All</button>
+      <button type="button" class="tab" data-cadence-tab="Weekly" role="tab" id="cadence-tab-weekly" aria-selected="false" aria-controls="task-panel" tabindex="-1">Weekly</button>
+      <button type="button" class="tab" data-cadence-tab="Quarterly" role="tab" id="cadence-tab-quarterly" aria-selected="false" aria-controls="task-panel" tabindex="-1">Quarterly</button>
+    </div>
+    <div id="task-panel" role="tabpanel" aria-labelledby="cadence-tab-all">
+      <p class="task-summary" id="task-summary">--</p>
+      <div class="task-sparkline" id="task-sparkline" aria-hidden="true"></div>
+      <ul id="task-list"></ul>
+    </div>
+    <div class="checklist-controls">
+      <button id="reset-tasks" type="button">Reset checklist</button>
+    </div>
+  </section>
+
+  <section class="grid" id="card-grid" aria-live="polite"></section>
+
+  <section class="panel spotlight" id="resource-spotlight">
+    <div class="spotlight-header">
+      <div>
+        <h2>Resource Spotlight</h2>
+        <p>Surface a helpful template or doc each week.</p>
+      </div>
+      <div class="spotlight-controls">
+        <button type="button" id="spotlight-prev" aria-label="Previous resource">←</button>
+        <button type="button" id="spotlight-next" aria-label="Next resource">→</button>
+      </div>
+    </div>
+    <article id="spotlight-card" class="spotlight-card" aria-live="polite"></article>
+  </section>
+
+  <section class="panel playables" id="playables">
+    <div class="playables-header">
+      <div>
+        <h2>Playable Projects</h2>
+        <p>Launch any build straight from LifeHub. Copy the command or open the folder.</p>
+      </div>
+      <span class="playables-count" id="playables-count"></span>
+    </div>
+    <div class="playables-grid" id="playables-grid"></div>
+  </section>
+
+  <section class="panel triage-panel" id="triage-panel" data-kiosk-highlight="triage">
+    <div class="triage-header">
+      <div>
+        <h2>Inbox Triage Board</h2>
+        <p>Drag each Inbox item into its destination column or use the "Send to" picker.</p>
+      </div>
+      <button type="button" id="triage-reset" class="ghost">Reset board</button>
+    </div>
+    <div class="triage-grid" id="triage-grid" aria-live="polite"></div>
+  </section>
+
+  <section class="panel downloads-panel" id="downloads-panel" data-kiosk-highlight="downloads">
+    <div class="downloads-header">
+      <div>
+        <h2>Downloads Watcher</h2>
+        <p>Highlights anything stuck outside LifeHub for longer than a day.</p>
+      </div>
+      <div class="downloads-actions">
+        <button type="button" id="downloads-refresh">Retry Load</button>
+        <a class="ghost" href="../Downloads/index.html" target="_blank" rel="noopener">Open Downloads index</a>
+      </div>
+    </div>
+    <p id="downloads-status" class="task-meta">Checking Downloads…</p>
+    <ol id="downloads-list" class="downloads-list"></ol>
+  </section>
+  <section class="panel downloads-triage-panel" id="downloads-triage-panel">
+    <div class="downloads-triage-header">
+      <div>
+        <h2>Downloads auto-triage</h2>
+        <p>Heuristics suggest where to file lingering downloads. One click moves them into place.</p>
+      </div>
+      <button type="button" id="downloads-triage-refresh" class="ghost">Refresh suggestions</button>
+    </div>
+    <p id="downloads-triage-status" class="task-meta">Gathering suggestions…</p>
+    <ul id="downloads-triage-list" class="downloads-triage-list"></ul>
+  </section>
+
+  <section class="panel resurface-panel" id="resurface-panel" data-kiosk-highlight="resurface">
+    <div class="resurface-header">
+      <div>
+        <h2>Resurface Carousel</h2>
+        <p>Files untouched for ~90 days bubble up here so you can archive or revive them.</p>
+      </div>
+      <div class="resurface-controls">
+        <select id="resurface-filter">
+          <option value="all">All areas</option>
+          <option value="Work">Work</option>
+          <option value="Family">Family</option>
+          <option value="Finance">Finance</option>
+          <option value="Housing">Housing</option>
+          <option value="Personal">Personal</option>
+          <option value="Projects">Projects</option>
+          <option value="Hobbies">Hobbies</option>
+          <option value="Media">Media</option>
+          <option value="Archive">Archive</option>
+        </select>
+        <button type="button" id="resurface-snooze" class="ghost">Snooze 30d</button>
+        <button type="button" id="resurface-skip" class="ghost">Skip</button>
+        <button type="button" id="resurface-prev" aria-label="Previous suggestion">←</button>
+        <button type="button" id="resurface-next" aria-label="Next suggestion">→</button>
+      </div>
+    </div>
+    <article id="resurface-card" class="resurface-card" aria-live="polite"></article>
+  </section>
+
+  <section class="panel scratchpad-panel" id="scratchpad-panel">
+    <div class="scratchpad-header">
+      <div>
+        <h2>Project Scratchpad</h2>
+        <p>Quick notes stay in your browser until you promote them into LifeHub.</p>
+      </div>
+      <span class="scratchpad-status" id="scratchpad-status">Unsaved</span>
+    </div>
+    <label for="scratchpad-input" class="visually-hidden">Scratchpad</label>
+    <textarea id="scratchpad-input" rows="6" placeholder="Drop ideas, commands, or journaling here..."></textarea>
+    <div class="scratchpad-controls">
+      <button type="button" id="scratchpad-promote">Promote to LifeHub</button>
+      <button type="button" id="scratchpad-copy">Copy text</button>
+      <button type="button" id="scratchpad-download">Download .md</button>
+      <button type="button" id="scratchpad-clear" class="ghost">Clear</button>
+    </div>
+  </section>
+
+  <section class="panel backup-panel" id="backup-panel" data-kiosk-highlight="backup">
+    <div class="backup-header">
+      <div>
+        <h2>Backup Integrity</h2>
+        <p>Know when each LifeHub replica last synced and how to verify it.</p>
+        <div class="backup-health-row">
+          <span id="backup-summary" class="status-chip">Loading backups…</span>
+          <span id="backup-next-action" class="backup-next-action">Pulling the latest backup info.</span>
+        </div>
+      </div>
+      <div class="backup-actions">
+        <button type="button" id="backup-refresh" class="ghost">Refresh</button>
+      </div>
+    </div>
+    <ul id="backup-list" class="backup-list" aria-live="polite"></ul>
+  </section>
+
+  <section class="panel text-game-event-panel" id="text-game-event-panel">
+    <div class="text-game-event-heading">
+      <div>
+        <p class="event-kicker">Today's realm event</p>
+        <h2 id="text-game-event-name">Loading…</h2>
+        <p class="event-summary" id="text-game-event-summary">Preparing the stage.</p>
+        <p class="event-meta" id="text-game-event-meta">Rotates daily.</p>
+      </div>
+      <span class="status-chip" id="text-game-event-effect">Fetching affix…</span>
+    </div>
+  </section>
+
+  <section class="panel text-game" id="text-game-panel">
+    <div class="text-game-header">
+      <div>
+        <h2>Fun Text Based Game 2025 (Browser)</h2>
+        <p>Runs the full Python adventure right here via Pyodide — needs a quick internet download the first time.</p>
+      </div>
+      <button type="button" id="text-game-start">Start Game</button>
+    </div>
+    <p class="text-game-status" id="text-game-status">Click “Start Game” to load the Python runtime (~10 MB download from CDN).</p>
+    <div class="text-game-console" id="text-game-output" aria-live="polite"></div>
+    <form id="text-game-form" class="text-game-form">
+      <input id="text-game-input" type="text" placeholder="Type a command (e.g., look, move e, unlock, talk, 1)" autocomplete="off" disabled />
+      <button type="submit" disabled>Send</button>
+    </form>
+    <div class="text-game-quick-actions">
+      <button type="button" data-game-command="base" data-command="map">Map</button>
+      <button type="button" data-game-command="base" data-command="help">Help</button>
+      <button type="button" data-game-command="base" data-command="clear">Clear console</button>
+    </div>
+    <div class="text-game-save-controls">
+      <label for="text-game-slot">Save slot</label>
+      <select id="text-game-slot">
+        <option value="slotA">Slot A</option>
+        <option value="slotB">Slot B</option>
+        <option value="slotC">Slot C</option>
+      </select>
+      <button type="button" data-game-save="base">Save</button>
+      <button type="button" data-game-load="base">Load</button>
+      <label class="autosave-toggle"><input type="checkbox" id="text-game-autosave" /> Autosave</label>
+      <label class="autosave-toggle"><input type="checkbox" id="text-game-groq" /> Groq hints</label>
+      <button type="button" id="text-game-groq-hint" class="ghost">Consult caretaker</button>
+      <span class="text-game-save-status" id="text-game-save-status"></span>
+    </div>
+    <details class="text-game-map" id="text-game-map-panel">
+      <summary>Map</summary>
+      <pre id="text-game-map-output">Use “Map” to fetch the current map.</pre>
+    </details>
+  </section>
+
+  <section class="panel text-game" id="text-game-v2-panel">
+    <div class="text-game-header">
+      <div>
+        <h2>Fun Text Based Game 2025 v2 (Browser)</h2>
+        <p>Play the expanded sandbox build (journals, crafting, Wilds) with zero setup — requires a short Pyodide download.</p>
+      </div>
+      <button type="button" id="text-game-v2-start">Start v2</button>
+    </div>
+    <p class="text-game-status" id="text-game-v2-status">Click “Start v2” to load the updated runtime (~10 MB download from CDN).</p>
+    <div class="text-game-console" id="text-game-v2-output" aria-live="polite"></div>
+    <form id="text-game-v2-form" class="text-game-form">
+      <input id="text-game-v2-input" type="text" placeholder="Type a command (e.g., look, move e, unlock, talk, 1)" autocomplete="off" disabled />
+      <button type="submit" disabled>Send</button>
+    </form>
+    <div class="text-game-quick-actions">
+      <button type="button" data-game-command="v2" data-command="map">Map</button>
+      <button type="button" data-game-command="v2" data-command="help">Help</button>
+      <button type="button" data-game-command="v2" data-command="clear">Clear console</button>
+    </div>
+    <div class="text-game-save-controls">
+      <label for="text-game-v2-slot">Save slot</label>
+      <select id="text-game-v2-slot">
+        <option value="slotA">Slot A</option>
+        <option value="slotB">Slot B</option>
+        <option value="slotC">Slot C</option>
+      </select>
+      <button type="button" data-game-save="v2">Save</button>
+      <button type="button" data-game-load="v2">Load</button>
+      <label class="autosave-toggle"><input type="checkbox" id="text-game-v2-autosave" /> Autosave</label>
+      <label class="autosave-toggle"><input type="checkbox" id="text-game-v2-groq" /> Groq hints</label>
+      <button type="button" id="text-game-v2-groq-hint" class="ghost">Consult caretaker</button>
+      <span class="text-game-save-status" id="text-game-v2-save-status"></span>
+    </div>
+    <details class="text-game-map" id="text-game-v2-map-panel">
+      <summary>Map</summary>
+      <pre id="text-game-v2-map-output">Use “Map” to fetch the current map.</pre>
+    </details>
+  </section>
+
+  <section class="panel detail" id="detail-view" aria-live="polite">
+    <div class="detail-header">
+      <div>
+        <h2 id="detail-title">Area</h2>
+        <p id="detail-description">Area details</p>
+      </div>
+      <button class="back-button" type="button" id="detail-back">← Back to Dashboard</button>
+    </div>
+    <dl>
+      <div>
+        <dt>Tags</dt>
+        <dd id="detail-tags">-</dd>
+      </div>
+      <div>
+        <dt>Focus</dt>
+        <dd id="detail-focus">-</dd>
+      </div>
+    </dl>
+    <div class="detail-links" id="detail-links"></div>
+    <div class="detail-root" id="detail-root"></div>
+  </section>
+
+  <div class="automation-modal" id="automation-modal" aria-hidden="true">
+    <div class="automation-dialog" role="dialog" aria-modal="true" aria-labelledby="automation-title">
+      <div class="automation-dialog-header">
+        <div>
+          <h2 id="automation-title">Automation Commands</h2>
+          <p>Review and copy commands to run in Terminal.</p>
+        </div>
+        <button type="button" class="close-button" id="automation-close" aria-label="Close automation modal">×</button>
+      </div>
+      <ul id="automation-list" class="automation-list"></ul>
+    </div>
+  </div>
+
+  <div class="command-palette" id="command-palette" aria-hidden="true">
+    <div class="command-dialog" role="dialog" aria-modal="true" aria-labelledby="command-title">
+      <div class="command-header">
+        <div>
+          <h2 id="command-title">Command Palette</h2>
+          <p>Jump to sections, run quick actions, or filter cards.</p>
+        </div>
+        <button type="button" class="close-button" id="command-close" aria-label="Close command palette">×</button>
+      </div>
+      <label class="visually-hidden" for="command-input">Search commands</label>
+      <input id="command-input" type="search" placeholder="Type a command or shortcut…" autocomplete="off" />
+      <ul id="command-results"></ul>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="icon" id="toast-icon">🎉</div>
+    <div>
+      <div class="label" id="toast-label">Achievement unlocked</div>
+      <div class="meta" id="toast-meta">Inbox zero</div>
+    </div>
+  </div>
+
+  <div class="timeline-modal" id="timeline-modal" aria-hidden="true">
+    <div class="timeline-dialog" role="dialog" aria-modal="true" aria-labelledby="timeline-modal-title">
+      <div class="timeline-dialog-header">
+        <div>
+          <h2 id="timeline-modal-title">Timeline detail</h2>
+          <p id="timeline-modal-meta" class="task-meta"></p>
+        </div>
+        <button type="button" class="close-button" id="timeline-modal-close" aria-label="Close timeline detail">×</button>
+      </div>
+      <div id="timeline-modal-body"></div>
+    </div>
+  </div>
+
+  </main>
+
+  <footer>
+    Tip: add this dashboard to your browser favourites or set it as Safari’s start page for one-click access to every LifeHub area. Update the quick stats whenever you finish a filing session (⌘+F to edit numbers). Shortcuts: `/` focuses search, I=Inbox, W=Work, F=Family, P=Projects, H=Hobbies, A=Archive, `?` opens the command palette.
+  </footer>
+  <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top">↑</button>
+  <script src="dashboard-data.js"></script>
+  <script src="dashboard-inline-data.js" defer></script>
+  <script src="text-game-sources.js" defer></script>
+  <script src="dashboard.js" defer></script>
+  <script src="scripts/apply_settings.js" defer></script>
+
+  <script>
+  // Welltory uploader integration: attempts to POST selected CSV to local uploader
+  document.addEventListener('DOMContentLoaded', function () {
+    const pick = document.getElementById('welltory-upload-pick');
+    const input = document.getElementById('welltory-upload-input');
+    const uploadBtn = document.getElementById('welltory-upload-button');
+    const status = document.getElementById('welltory-upload-status');
+    const stateSpan = document.getElementById('welltory-uploader-state');
+    const wellbeingPanel = document.getElementById('wellbeing-widget');
+    const wellbeingLatestEl = document.getElementById('wellbeing-latest');
+    const wellbeingCountEl = document.getElementById('wellbeing-count');
+    const WELLBEING_FLASH_CLASS = 'wellbeing-flash';
+
+    const UPLOADER_URL = 'http://127.0.0.1:8008/upload';
+    const automationRunnerUrl = window.LIFEHUB_AUTOMATION_URL || 'http://127.0.0.1:8766/run';
+    const welltoryAutomationTask = {
+      id: 'start-welltory-uploader',
+      label: 'Start Welltory uploader',
+      command: 'bash scripts/start_welltory_daemon.sh'
+    };
+    let isAutoStartingWelltory = false;
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const summaryLinkHtml = ' <a href="welltory-summary.json" target="_blank" rel="noopener">View summary</a>';
+
+    function flashWellbeingPanel() {
+      if (!wellbeingPanel) return;
+      wellbeingPanel.classList.remove(WELLBEING_FLASH_CLASS);
+      void wellbeingPanel.offsetWidth;
+      wellbeingPanel.classList.add(WELLBEING_FLASH_CLASS);
+      window.setTimeout(() => wellbeingPanel.classList.remove(WELLBEING_FLASH_CLASS), 1500);
+    }
+
+    function buildWellbeingStatusText() {
+      const latest = (wellbeingLatestEl?.textContent || '').trim();
+      const countText = (wellbeingCountEl?.textContent || '').trim();
+      const parts = [];
+      if (latest && latest !== '--' && latest.toLowerCase() !== 'no data' && latest.toLowerCase() !== 'summary unavailable') {
+        parts.push(`Latest ${latest}`);
+      }
+      if (countText && countText !== '--') {
+        const numeric = Number(countText.replace(/[^0-9.]/g, ''));
+        if (Number.isFinite(numeric)) {
+          parts.push(`${numeric} measurement${numeric === 1 ? '' : 's'}`);
+        } else {
+          parts.push(`${countText} measurements`);
+        }
+      }
+      return parts.length ? `Upload complete — ${parts.join(' · ')}.` : 'Upload complete — wellbeing snapshot refreshed.';
+    }
+
+    async function refreshWellbeingSnapshotAfterUpload() {
+      if (status) status.textContent = 'Upload complete — refreshing wellbeing snapshot…';
+      if (typeof window.loadWellbeing === 'function') {
+        try {
+          await window.loadWellbeing();
+        } catch (err) {
+          console.warn('Unable to refresh wellbeing snapshot', err);
+        }
+      }
+      if (status) {
+        status.innerHTML = `${buildWellbeingStatusText()}${summaryLinkHtml}`;
+      }
+      flashWellbeingPanel();
+    }
+
+    async function checkUploader() {
+      try {
+        // Fail fast when the daemon is down: without a timeout this probe is
+        // the slowest resource on the page (~400ms) on every load.
+        const res = await fetch(UPLOADER_URL, {
+          method: 'OPTIONS',
+          mode: 'cors',
+          signal: AbortSignal.timeout(1200)
+        });
+        stateSpan.textContent = res.ok ? 'running' : 'reachable';
+        return res.ok;
+      } catch (err) {
+        stateSpan.textContent = 'not reachable';
+        return false;
+      }
+    }
+
+    async function startWelltoryViaAutomation(message) {
+      if (isAutoStartingWelltory) return false;
+      if (status && message) status.textContent = message;
+      isAutoStartingWelltory = true;
+      try {
+        const response = await fetch(automationRunnerUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tasks: [welltoryAutomationTask] })
+        });
+        if (!response.ok) throw new Error(`Automation runner returned ${response.status}`);
+        const payload = await response.json();
+        const run = Array.isArray(payload?.runs) ? payload.runs[0] : null;
+        if (run && run.exitCode === 0) {
+          stateSpan.textContent = 'starting';
+          await wait(1300);
+          return checkUploader();
+        }
+        if (status) status.textContent = 'Automation runner could not start the uploader.';
+        return false;
+      } catch (err) {
+        console.error('Unable to auto-start Welltory uploader', err);
+        if (status) status.textContent = 'Automation runner offline — start automation_server.py.';
+        return false;
+      } finally {
+        isAutoStartingWelltory = false;
+      }
+    }
+
+    async function uploadWelltoryFile(file) {
+      const form = new FormData();
+      form.append('file', file, file.name);
+      let res;
+      try {
+        res = await fetch(UPLOADER_URL, { method: 'POST', body: form });
+      } catch (err) {
+        err.isNetworkError = true;
+        throw err;
+      }
+      const text = await res.text();
+      if (!res.ok) {
+        const error = new Error(text || res.statusText || 'Upload failed');
+        error.http = true;
+        error.responseText = text;
+        throw error;
+      }
+      return text;
+    }
+
+    // initial check
+    checkUploader();
+
+    // Modal controls
+    const startModal = document.getElementById('welltory-start-modal');
+    const copyBtn = document.getElementById('welltory-copy-cmd');
+    const downloadLink = document.getElementById('welltory-download-launcher');
+    const closeBtn = document.getElementById('welltory-start-close');
+    const startCmdPre = document.getElementById('welltory-start-cmd');
+
+    copyBtn && copyBtn.addEventListener('click', async () => {
+      const txt = startCmdPre.textContent.trim();
+      try {
+        await navigator.clipboard.writeText(txt);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy command'; }, 1500);
+      } catch (e) {
+        alert('Copy failed — please copy manually: ' + txt);
+      }
+    });
+    closeBtn && closeBtn.addEventListener('click', () => { startModal.style.display = 'none'; });
+
+    // Installer download + guidance
+    const installBtn = document.getElementById('welltory-install-btn');
+    const installAnchor = document.getElementById('welltory-download-installer');
+    installBtn && installBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Trigger download of the .command installer
+      if (installAnchor) {
+        installAnchor.click();
+        // Show a short instruction to the user
+        alert('Downloaded the installer. Locate "install_welltory_uploader.command" in your Downloads folder (or the browser download location), then double-click it in Finder to install and start the uploader. You may need to allow it in System Preferences → Security & Privacy.');
+      } else {
+        alert('Installer not available in the dashboard directory.');
+      }
+    });
+
+    // Try to fetch a detected venv hint (written by the installer) and show a suggested install command
+    const venvHintEl = document.createElement('div');
+    venvHintEl.id = 'welltory-venv-hint';
+    venvHintEl.style.marginTop = '8px';
+    const modalBody = startModal?.querySelector('div');
+    modalBody && modalBody.appendChild(venvHintEl);
+    (async function loadVenvHint() {
+      try {
+        const res = await fetch('scripts/venv_detected.txt');
+        if (!res.ok) return;
+        const txt = (await res.text()).trim();
+        if (!txt) return;
+        // Show suggestion to use this python
+        venvHintEl.innerHTML = `<p class="task-meta">Detected python: <code>${txt}</code></p><p class="task-meta"><button id="welltory-copy-install-cmd" class="ghost">Copy install command using detected python</button></p>`;
+        const copyCmdBtn = document.getElementById('welltory-copy-install-cmd');
+        copyCmdBtn && copyCmdBtn.addEventListener('click', async () => {
+          const cmd = `bash "${location.pathname.replace(/\/[^/]*$/, '')}/scripts/install_welltory_uploader.sh" "${txt}"`;
+          try { await navigator.clipboard.writeText(cmd); copyCmdBtn.textContent = 'Copied!'; setTimeout(() => copyCmdBtn.textContent = 'Copy install command using detected python', 1500); } catch (e) { alert('Copy failed — use this command:\n' + cmd); }
+        });
+      } catch (e) { /* ignore */ }
+    })();
+
+    pick.addEventListener('click', () => input.click());
+    input.addEventListener('change', () => {
+      const f = input.files[0];
+      if (f) {
+        const s = status.querySelector('span');
+        if (s) s.textContent = `ready: ${f.name}`;
+      }
+    });
+
+    uploadBtn.addEventListener('click', async () => {
+      const f = input.files[0];
+      if (!f) { alert('Choose a Welltory CSV file first.'); return; }
+      uploadBtn.disabled = true;
+      status.textContent = 'Uploading…';
+      try {
+        await uploadWelltoryFile(f);
+        await refreshWellbeingSnapshotAfterUpload();
+      } catch (err) {
+        const isNetworkError = err && (err.isNetworkError || err.name === 'TypeError');
+        if (isNetworkError) {
+          const started = await startWelltoryViaAutomation('Uploader offline — starting it now…');
+          if (started) {
+            status.textContent = 'Uploader started — retrying upload…';
+            try {
+              await uploadWelltoryFile(f);
+              await refreshWellbeingSnapshotAfterUpload();
+            } catch (retryErr) {
+              console.error('Retry upload failed', retryErr);
+              status.innerHTML = 'Upload failed after restart: ' + (retryErr.message || 'Unknown error');
+            }
+          } else {
+            status.textContent = 'Error: uploader not reachable.';
+            if (startModal) startModal.style.display = 'flex';
+          }
+        } else {
+          status.innerHTML = 'Upload failed: ' + (err?.message || 'Unknown error');
+        }
+      } finally {
+        uploadBtn.disabled = false;
+        checkUploader();
+      }
+    });
+
+    // Quick Launch: helpers, drag/drop, pinning, keyboard activation and persistence
+    const qGrid = document.getElementById('quick-launch-grid');
+    const actionFeedbackEl = document.getElementById('action-feedback');
+    const storageKeyOrder = 'lh_quicklaunch_order';
+    const storageKeyPinned = 'lh_quicklaunch_pinned';
+
+    const getQuickLaunchHref = (item) => {
+      return (item.dataset.href || item.getAttribute('href') || '').trim();
+    };
+
+    const announceQuickLaunch = (message) => {
+      if (!message) return;
+      if (typeof window.setActionFeedback === 'function') {
+        window.setActionFeedback(message);
+      } else if (actionFeedbackEl) {
+        actionFeedbackEl.textContent = message;
+      }
+    };
+
+    const openQuickLaunchTarget = (target) => {
+      if (!target) return false;
+      const newWin = window.open(target, '_blank', 'noopener');
+      if (!newWin) window.location.href = target;
+      return true;
+    };
+
+    function handleQuickLaunchNavigation(item) {
+      const href = getQuickLaunchHref(item);
+      if (!href || href === '#') return false;
+      if (href.startsWith('#')) {
+        try {
+          const target = document.querySelector(href);
+          if (!target) return false;
+          target.scrollIntoView({ behavior: 'smooth' });
+          if (href === '#wellbeing-widget') {
+            document.getElementById('welltory-upload-pick')?.click();
+            announceQuickLaunch('Select a Welltory CSV to upload.');
+          } else if (href === '#scratchpad-panel') {
+            setTimeout(() => { document.getElementById('scratchpad-input')?.focus(); }, 200);
+            announceQuickLaunch('Scratchpad ready for a quick note.');
+          }
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+      if (href.startsWith('mailto:') || href.startsWith('http') || href.includes('.html') || href.endsWith('/')) {
+        openQuickLaunchTarget(href);
+        return true;
+      }
+      return false;
+    }
+
+    function handleQuickLaunchFallback(item) {
+      const id = item.dataset.id;
+      switch (id) {
+        case 'start-timer':
+          openQuickLaunchTarget('https://timer-tab.com/');
+          announceQuickLaunch('Opening a browser timer — switch tabs to start your focus session.');
+          break;
+        case 'log-expense':
+          openQuickLaunchTarget('Finance/index.html');
+          announceQuickLaunch('Opening Finance so you can drop the receipt or update the ledger.');
+          break;
+        case 'welltory':
+          document.getElementById('wellbeing-widget')?.scrollIntoView({ behavior: 'smooth' });
+          document.getElementById('welltory-upload-pick')?.click();
+          announceQuickLaunch('Select a Welltory CSV to upload.');
+          startWelltoryViaAutomation('Starting uploader for quick launch…');
+          break;
+        case 'new-note':
+          setTimeout(() => { document.getElementById('scratchpad-input')?.focus(); }, 200);
+          announceQuickLaunch('Scratchpad ready for a quick note.');
+          break;
+        case 'inbox':
+          openQuickLaunchTarget('Inbox/index.html');
+          announceQuickLaunch('Opening Inbox in a new tab.');
+          break;
+        case 'downloads':
+          openQuickLaunchTarget('Downloads/index.html');
+          announceQuickLaunch('Opening Downloads in a new tab.');
+          break;
+        default:
+          announceQuickLaunch('Quick launch item activated.');
+      }
+    }
+
+    function saveOrder() {
+      const ids = Array.from(qGrid.querySelectorAll('.quick-launch-item')).map(n => n.dataset.id);
+      localStorage.setItem(storageKeyOrder, JSON.stringify(ids));
+    }
+    function savePinned(pinnedSet) {
+      localStorage.setItem(storageKeyPinned, JSON.stringify(Array.from(pinnedSet)));
+    }
+    function loadPinned() {
+      try { return new Set(JSON.parse(localStorage.getItem(storageKeyPinned)) || []); } catch (e) { return new Set(); }
+    }
+    function applyPinned(pinnedSet) {
+      qGrid.querySelectorAll('.quick-launch-item').forEach(it => {
+        const id = it.dataset.id;
+        const pinned = pinnedSet.has(id);
+        it.setAttribute('data-pinned', pinned ? 'true' : 'false');
+        const btn = it.querySelector('.pin-btn');
+        if (btn) btn.setAttribute('aria-pressed', pinned ? 'true' : 'false');
+      });
+    }
+
+    const pinnedSet = loadPinned();
+    applyPinned(pinnedSet);
+
+    // Make items draggable & keyboard-activatable
+    let dragSrc = null;
+    function attachQuickLaunchItem(item) {
+      item.addEventListener('dragstart', (ev) => { dragSrc = item; item.classList.add('dragging'); ev.dataTransfer.effectAllowed = 'move'; });
+      item.addEventListener('dragend', () => { dragSrc && dragSrc.classList.remove('dragging'); dragSrc = null; saveOrder(); });
+      item.addEventListener('dragover', (ev) => { ev.preventDefault(); qGrid.classList.add('drag-over'); ev.dataTransfer.dropEffect = 'move'; });
+      item.addEventListener('dragleave', () => { qGrid.classList.remove('drag-over'); });
+      item.addEventListener('drop', (ev) => {
+        ev.preventDefault(); qGrid.classList.remove('drag-over');
+        if (!dragSrc || dragSrc === item) return;
+        // insert before the drop target
+        qGrid.insertBefore(dragSrc, item);
+      });
+
+      // keyboard activation
+      item.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault(); item.click();
+        }
+        if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'p') {
+          ev.preventDefault(); togglePin(item);
+        }
+      });
+
+      // click behavior: navigate when possible, otherwise trigger fallback actions
+      item.addEventListener('click', (ev) => {
+        if (handleQuickLaunchNavigation(item)) {
+          ev.preventDefault();
+          return;
+        }
+        handleQuickLaunchFallback(item);
+      });
+
+      // pin button
+      const pin = item.querySelector('.pin-btn');
+      pin && pin.addEventListener('click', (ev) => { ev.stopPropagation(); togglePin(item); });
+    }
+
+    function togglePin(item) {
+      const id = item.dataset.id;
+      if (pinnedSet.has(id)) pinnedSet.delete(id); else pinnedSet.add(id);
+      applyPinned(pinnedSet);
+      savePinned(pinnedSet);
+      // move pinned items to start
+      reorderPinnedFirst();
+      saveOrder();
+    }
+
+    function reorderPinnedFirst() {
+      const nodes = Array.from(qGrid.querySelectorAll('.quick-launch-item'));
+      const pinned = nodes.filter(n => n.getAttribute('data-pinned') === 'true');
+      const others = nodes.filter(n => n.getAttribute('data-pinned') !== 'true');
+      pinned.forEach(n => qGrid.appendChild(n));
+      others.forEach(n => qGrid.appendChild(n));
+    }
+
+    // Load saved order and pinned, then attach base listeners
+    (function restoreQuickLaunch() {
+      const raw = localStorage.getItem(storageKeyOrder);
+      if (raw) {
+        try {
+          const ids = JSON.parse(raw);
+          const map = new Map();
+          qGrid.querySelectorAll('.quick-launch-item').forEach(el => map.set(el.dataset.id, el));
+          ids.forEach(id => {
+            const el = map.get(id);
+            if (el) qGrid.appendChild(el);
+          });
+        } catch (e) { /* ignore */ }
+      }
+      qGrid.querySelectorAll('.quick-launch-item').forEach(attachQuickLaunchItem);
+    })();
+
+    // expose helper for dynamically added quick launch tiles
+    window.lhQuickLaunch = {
+      attach: (el) => attachQuickLaunchItem(el),
+      saveOrder,
+      applyPinned: () => applyPinned(pinnedSet),
+      pinnedSet
+    };
+
+    // Ensure pinned-first ordering initially
+    reorderPinnedFirst();
+    saveOrder();
+
+    // Needs-attention: simple seeded items and dismiss
+    const attentionList = document.getElementById('attention-list');
+    const attentionKey = 'lh_attention_items';
+    function loadAttention() {
+      try { return JSON.parse(localStorage.getItem(attentionKey)) || []; } catch (e) { return []; }
+    }
+    function saveAttention(arr) { localStorage.setItem(attentionKey, JSON.stringify(arr)); }
+    function renderAttention() {
+      const arr = loadAttention();
+      attentionList.innerHTML = '';
+      if (arr.length === 0) {
+        const li = document.createElement('li'); li.className = 'task-meta'; li.textContent = 'All clear — nothing needs attention right now.'; attentionList.appendChild(li); return;
+      }
+      arr.forEach((it, idx) => {
+        const li = document.createElement('li'); li.className = 'attention-item';
+        const span = document.createElement('span'); span.textContent = it.text;
+        const btn = document.createElement('button'); btn.className = 'dismiss'; btn.textContent = 'Dismiss'; btn.addEventListener('click', () => { arr.splice(idx,1); saveAttention(arr); renderAttention(); });
+        li.appendChild(span); li.appendChild(btn); attentionList.appendChild(li);
+      });
+    }
+    // seed sample attention items if none
+    if (loadAttention().length === 0) {
+      saveAttention([
+        { text: 'Welltory import missing — click Upload Welltory' },
+        { text: 'Calendar ICS not updated in 5 days' }
+      ]);
+    }
+    renderAttention();
+
+    // Delegated click handler for quick-launch (robust if elements are overlaid)
+    qGrid && qGrid.addEventListener('click', (ev) => {
+      const clicked = ev.target.closest && ev.target.closest('.quick-launch-item');
+      if (!clicked || !qGrid.contains(clicked)) return;
+      // If pin button clicked, toggle pin
+      if (ev.target.closest && ev.target.closest('.pin-btn')) {
+        ev.preventDefault(); ev.stopPropagation(); togglePin(clicked); return;
+      }
+      // Otherwise perform the same action as the per-item handler
+      const href = clicked.dataset.href;
+      if (href && href.startsWith('#')) {
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+        if (href === '#wellbeing-widget') document.getElementById('welltory-upload-pick')?.click();
+        return;
+      }
+      if (href && (href.startsWith('http') || href.includes('.html'))) {
+        window.open(href, '_blank', 'noopener');
+        return;
+      }
+      // ID fallbacks
+      if (clicked.id === 'quicklaunch-start-timer') { alert('Timer placeholder — implement Pomodoro here'); return; }
+      if (clicked.id === 'quicklaunch-new-note') { setTimeout(() => { document.getElementById('scratchpad-input')?.focus(); }, 150); return; }
+    });
+  });
+  </script>
+
+  <script>
+    // Display, density, accessibility, onboarding, and custom quick actions
+    document.addEventListener('DOMContentLoaded', function () {
+      const body = document.body;
+      const themeSelect = document.getElementById('theme-select');
+      const compactToggle = document.getElementById('compact-toggle');
+      const calmToggle = document.getElementById('calm-toggle');
+      const readableToggle = document.getElementById('readable-font-toggle');
+      const shadowToggle = document.getElementById('shadow-toggle');
+      const confettiToggle = document.getElementById('confetti-toggle');
+      const modeSelect = document.getElementById('mode-select');
+      const customLabel = document.getElementById('custom-quick-label');
+      const customUrl = document.getElementById('custom-quick-url');
+      const customIcon = document.getElementById('custom-quick-icon');
+      const customColor = document.getElementById('custom-quick-color');
+      const customAdd = document.getElementById('custom-quick-add');
+      const qGrid = document.getElementById('quick-launch-grid');
+      const storageKeys = {
+        theme: 'lh_theme_style',
+        compact: 'lh_density_compact',
+        calm: 'lh_mode_calm',
+        readable: 'lh_readable_font',
+        noShadows: 'lh_no_shadows',
+        confetti: 'lh_confetti_enabled',
+        customQuick: 'lh_custom_quick_actions',
+        onboarding: 'lh_onboarding_seen',
+        mode: 'lh_mode_filter'
+      };
+      function fireConfetti() {
+        if (!window.confettiEnabled || body.classList.contains('mode-calm')) return;
+        const colors = ['#5da8ff', '#22d3b6', '#f59e0b', '#c084fc', '#fb7185', '#0ea5e9'];
+        const count = 20;
+        for (let i = 0; i < count; i++) {
+          const piece = document.createElement('span');
+          piece.className = 'confetti-piece';
+          const angle = (Math.random() * 2 - 1) * 120; // horizontal drift
+          const distance = 60 + Math.random() * 60;
+          piece.style.setProperty('--confetti-x', `${angle}px`);
+          piece.style.setProperty('--confetti-y', `${distance}vh`);
+          piece.style.left = `${Math.random() * 100}%`;
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDelay = `${Math.random() * 0.2}s`;
+          document.body.appendChild(piece);
+          setTimeout(() => piece.remove(), 1400);
+        }
+      }
+      const MODE_GROUPS = {
+        fun: ['playables', 'text-game-panel', 'text-game-v2-panel', 'resource-spotlight', 'card-grid'],
+        work: [
+          'copilot-panel',
+          'automation-scheduler-panel',
+          'health-panel',
+          'timeline-panel',
+          'recent-files-panel',
+          'triage-panel',
+          'downloads-panel',
+          'downloads-triage-panel',
+          'resurface-panel',
+          'backup-panel'
+        ],
+        parenting: ['wellbeing-widget', 'triage-panel', 'backup-panel'],
+        mixed: []
+      };
+
+      function applyTheme(mode) {
+        const knownThemes = ['modern', 'classic', 'contrast', 'irish', 'aussie', 'halloween', 'christmas', 'easter'];
+        const fallback = knownThemes.includes(mode) ? mode : 'modern';
+        knownThemes.forEach((name) => {
+          if (name !== 'modern') body.classList.remove(`theme-${name}`);
+        });
+        if (fallback !== 'modern') {
+          body.classList.add(`theme-${fallback}`);
+        }
+        if (themeSelect) themeSelect.value = fallback;
+        fireConfetti();
+        try { localStorage.setItem(storageKeys.theme, fallback); } catch (e) {}
+      }
+
+      function applyCompact(enabled) {
+        body.classList.toggle('density-compact', enabled);
+        if (compactToggle) compactToggle.checked = enabled;
+        try { localStorage.setItem(storageKeys.compact, enabled ? '1' : '0'); } catch (e) {}
+      }
+
+      function applyCalm(enabled) {
+        body.classList.toggle('mode-calm', enabled);
+        if (calmToggle) calmToggle.checked = enabled;
+        try { localStorage.setItem(storageKeys.calm, enabled ? '1' : '0'); } catch (e) {}
+      }
+
+      function applyReadable(enabled) {
+        body.classList.toggle('font-readable', enabled);
+        if (readableToggle) readableToggle.checked = enabled;
+        try { localStorage.setItem(storageKeys.readable, enabled ? '1' : '0'); } catch (e) {}
+      }
+
+      function applyNoShadows(enabled) {
+        body.classList.toggle('no-shadows', enabled);
+        if (shadowToggle) shadowToggle.checked = enabled;
+        try { localStorage.setItem(storageKeys.noShadows, enabled ? '1' : '0'); } catch (e) {}
+      }
+      function applyConfetti(enabled) {
+        window.confettiEnabled = !!enabled;
+        if (confettiToggle) confettiToggle.checked = !!enabled;
+        try { localStorage.setItem(storageKeys.confetti, enabled ? '1' : '0'); } catch (e) {}
+      }
+
+      function applyMode(mode) {
+        const requested = ['fun', 'work', 'parenting', 'mixed'].includes(mode) ? mode : 'mixed';
+        const allPanels = Array.from(document.querySelectorAll('.panel'));
+        const hideSet = new Set(MODE_GROUPS[requested] || []);
+        allPanels.forEach((panel) => {
+          const id = panel.id;
+          if (!id && hideSet.size > 0) {
+            panel.classList.add('mode-hidden');
+            return;
+          }
+          const tag = panel.dataset.modeTag;
+          const shouldHide =
+            hideSet.size > 0 && !hideSet.has(id) && !(tag && hideSet.has(tag));
+          panel.classList.toggle('mode-hidden', shouldHide);
+        });
+        document.querySelectorAll('.side-nav a').forEach((link) => {
+          const href = link.getAttribute('href') || '';
+          if (!href.startsWith('#')) return;
+          const target = document.querySelector(href);
+          if (!target) return;
+          link.classList.toggle('mode-hidden', hideSet.size > 0 && target.classList.contains('mode-hidden'));
+        });
+        if (modeSelect) modeSelect.value = requested;
+        fireConfetti();
+        try { localStorage.setItem(storageKeys.mode, requested); } catch (e) {}
+      }
+
+      // Load saved settings
+      try {
+        const savedTheme = localStorage.getItem(storageKeys.theme);
+        applyTheme(savedTheme || 'modern');
+        applyCompact(localStorage.getItem(storageKeys.compact) === '1');
+        applyCalm(localStorage.getItem(storageKeys.calm) === '1');
+        applyReadable(localStorage.getItem(storageKeys.readable) === '1');
+        applyNoShadows(localStorage.getItem(storageKeys.noShadows) === '1');
+        applyConfetti(localStorage.getItem(storageKeys.confetti) !== '0');
+        applyMode(localStorage.getItem(storageKeys.mode) || 'mixed');
+      } catch (e) {
+        applyTheme('modern');
+      }
+
+      themeSelect && themeSelect.addEventListener('change', (ev) => applyTheme(ev.target.value));
+      compactToggle && compactToggle.addEventListener('change', (ev) => applyCompact(ev.target.checked));
+      calmToggle && calmToggle.addEventListener('change', (ev) => applyCalm(ev.target.checked));
+      readableToggle && readableToggle.addEventListener('change', (ev) => applyReadable(ev.target.checked));
+      shadowToggle && shadowToggle.addEventListener('change', (ev) => applyNoShadows(ev.target.checked));
+      confettiToggle && confettiToggle.addEventListener('change', (ev) => applyConfetti(ev.target.checked));
+      modeSelect && modeSelect.addEventListener('change', (ev) => applyMode(ev.target.value));
+
+      // Custom quick actions injected into quick launch grid
+      const CUSTOM_PREFIX = 'custom-quick-';
+      function loadCustomQuick() {
+        try { return JSON.parse(localStorage.getItem(storageKeys.customQuick)) || []; } catch (e) { return []; }
+      }
+      function saveCustomQuick(list) {
+        localStorage.setItem(storageKeys.customQuick, JSON.stringify(list));
+      }
+      function removeCustom(id) {
+        const list = loadCustomQuick().filter((it) => it.id !== id);
+        saveCustomQuick(list);
+        const el = qGrid?.querySelector(`[data-id="${id}"]`);
+        if (el) el.remove();
+      }
+      function renderCustomQuick() {
+        const list = loadCustomQuick();
+        list.forEach(({ id, label, url, icon: iconChar, color }) => {
+          if (!qGrid || qGrid.querySelector(`[data-id="${id}"]`)) return;
+          const a = document.createElement('a');
+          a.role = 'listitem';
+          a.className = 'quick-launch-item';
+          a.dataset.id = id;
+          a.dataset.href = url;
+          a.href = url || '#';
+          a.tabIndex = 0;
+          a.draggable = true;
+          const icon = iconChar || '⚡';
+          const colorStyle = color ? `style="border-color:${color};box-shadow:0 8px 18px ${color}1a"` : '';
+          a.setAttribute('data-color', color || '');
+          a.innerHTML = `<button class="pin-btn" aria-pressed="false" title="Pin">📌</button><span class="icon">${icon}</span><span class="label">${label}</span><button class="remove-quick" title="Remove" aria-label="Remove custom action">✕</button>`;
+          if (colorStyle) a.setAttribute('style', colorStyle);
+          if (window.lhQuickLaunch?.attach) {
+            window.lhQuickLaunch.attach(a);
+            window.lhQuickLaunch.applyPinned?.();
+          }
+          const removeBtn = a.querySelector('.remove-quick');
+          removeBtn?.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            removeCustom(id);
+            window.lhQuickLaunch?.saveOrder?.();
+          });
+          qGrid?.appendChild(a);
+          window.lhQuickLaunch?.saveOrder?.();
+        });
+      }
+      renderCustomQuick();
+
+      customAdd && customAdd.addEventListener('click', () => {
+        const label = (customLabel?.value || '').trim();
+        const url = (customUrl?.value || '').trim();
+        if (!label || !url) { alert('Enter a label and a URL/path.'); return; }
+        const list = loadCustomQuick();
+        const id = `${CUSTOM_PREFIX}${Date.now()}`;
+        const icon = (customIcon?.value || '').trim().slice(0, 3);
+        const color = customColor?.value || '';
+        list.push({ id, label, url, icon, color });
+        saveCustomQuick(list);
+        customLabel.value = '';
+        customUrl.value = '';
+        if (customIcon) customIcon.value = '';
+        renderCustomQuick();
+      });
+
+      // Simple onboarding highlight (one-time)
+      const ONBOARDING_ID = 'onboarding-overlay';
+      if (!localStorage.getItem(storageKeys.onboarding)) {
+        const overlay = document.createElement('div');
+        overlay.id = ONBOARDING_ID;
+        overlay.innerHTML = `
+          <div class="onboarding-dialog">
+            <h3>New controls</h3>
+            <ul>
+              <li>Use Theme/Compact/Calm toggles for quick readability tweaks.</li>
+              <li>Add your own quick actions in the Quick actions panel.</li>
+              <li>Try High contrast for maximum legibility.</li>
+            </ul>
+            <button type="button" id="onboarding-dismiss">Got it</button>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+        const dismiss = overlay.querySelector('#onboarding-dismiss');
+        dismiss?.addEventListener('click', () => {
+          overlay.remove();
+          localStorage.setItem(storageKeys.onboarding, '1');
+        });
+      }
+    });
+  </script>
+  <script>
+    // Label a few un-id'd panels for mode tagging
+    document.querySelectorAll('.panel.quick-actions').forEach((el) => el.setAttribute('data-mode-tag', 'fun'));
+    document.querySelectorAll('.panel.search-panel').forEach((el) => el.setAttribute('data-mode-tag', 'work'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# Refresh Welltory summary every two hours (adjust USERNAME + path before importing).
+0 */2 * * * /usr/bin/env python3 /Users/USERNAME/LifeHub/scripts/update_welltory_summary.py >> /Users/USERNAME/Library/Logs/lifehub-welltory.log 2>&1

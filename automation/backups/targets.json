@@ -1,0 +1,26 @@
+[
+  {
+    "id": "lifehub-ssd",
+    "label": "LifeHub SSD clone",
+    "frequency": "Daily",
+    "location": "Desk drawer NVMe (2TB)",
+    "command": "rsync -ah --delete ~/LifeHub /Volumes/LifeHub-Clone",
+    "max_age_hours": 36
+  },
+  {
+    "id": "icloud-drive",
+    "label": "iCloud Drive sync",
+    "frequency": "Hourly",
+    "location": "Joshua's iCloud account",
+    "command": "open ~/Library/Mobile\\ Documents/com~apple~CloudDocs/LifeHub",
+    "max_age_hours": 3
+  },
+  {
+    "id": "offsite",
+    "label": "Offsite cold storage",
+    "frequency": "Monthly",
+    "location": "Bendigo safe deposit box",
+    "command": "Verify Backblaze snapshot 2025-10-01",
+    "max_age_hours": 24
+  }
+]
