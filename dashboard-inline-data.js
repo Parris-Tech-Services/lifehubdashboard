@@ -145,34 +145,4 @@
     setNavOpen(false);
   }
 
-  // Shared podcast launcher and its Dashboard settings integration.
-  if (document.querySelector('script[data-josh-podcast-dock="true"]')) return;
-
-  const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/gh/joshualparris/JoshHub@ebb0d17495c92d3ce09df1fd1bdb5d4c2056914d/public/podcast-launcher-v3.js';
-  script.defer = true;
-  script.dataset.joshPodcastDock = 'true';
-  script.dataset.topics = 'it,software,research,faith,relationships,career,decision,homelab,horses';
-  script.dataset.defaultTopic = 'faith';
-  script.dataset.launcherLabel = '🎧 Podcasts';
-  script.dataset.settingsTarget = '.settings-sheet';
-
-  const mountPodcastSetting = () => {
-    const settingsHost = document.querySelector('.settings-sheet');
-    if (settingsHost && window.JoshPodcastDock) {
-      window.JoshPodcastDock.mountSettings();
-      return true;
-    }
-    return false;
-  };
-
-  script.addEventListener('load', () => {
-    if (mountPodcastSetting()) return;
-    const observer = new MutationObserver(() => {
-      if (mountPodcastSetting()) observer.disconnect();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-
-  document.body.appendChild(script);
 })();
