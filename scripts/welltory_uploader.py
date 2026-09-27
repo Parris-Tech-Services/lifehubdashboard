@@ -16,13 +16,26 @@ from datetime import datetime
 from pathlib import Path
 from typing import Tuple
 
-from flask import Flask, request, redirect, url_for, send_from_directory, render_template_string
+from flask import Flask, request, redirect, url_for, send_from_directory, render_template_string, abort
 
 ROOT = Path(__file__).resolve().parents[1]
 WELLTORY_DIR = ROOT / "Personal" / "Health" / "Welltory"
 WELLTORY_DIR.mkdir(parents=True, exist_ok=True)
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
+ALLOWED_ORIGINS = {"http://127.0.0.1:8008", "http://localhost:8008"}
+
+
+@app.before_request
+def block_cross_site_writes():
+    if request.method not in {"POST", "PUT", "PATCH", "DELETE"}:
+        return None
+    origin = request.headers.get("Origin")
+    if origin and origin not in ALLOWED_ORIGINS:
+        abort(403)
+    return None
+
 
 
 def save_upload(file_storage) -> Tuple[Path, str]:
@@ -50,6 +63,8 @@ def upload():
     f = request.files["file"]
     if f.filename == "":
         return ("No selected file", 400)
+    if Path(f.filename).suffix.lower() != ".csv":
+        return ("Only CSV uploads are accepted", 400)
 
     dest, name = save_upload(f)
 
@@ -73,19 +88,19 @@ def result(filename: str):
     # Show a tiny result page with links to the saved file and the summary
     saved_path = WELLTORY_DIR / filename
     summary = ROOT / "welltory-summary.json"
-    html = f"""
+    html = """
     <!doctype html>
     <html>
       <head><meta charset="utf-8"><title>Welltory upload result</title></head>
       <body>
         <h2>Upload complete</h2>
-        <p>Saved as: <a href="/files/{filename}">{filename}</a></p>
+        <p>Saved as: <a href="{{ url_for('files', filename=filename) }}">{{ filename }}</a></p>
         <p>Summary: <a href="/welltory-summary.json">welltory-summary.json</a></p>
         <p><a href="/">Upload another file</a></p>
       </body>
     </html>
     """
-    return html
+    return render_template_string(html, filename=filename)
 
 
 @app.route("/files/<path:filename>")
