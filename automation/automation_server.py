@@ -1,8 +1,34 @@
 #!/usr/bin/env python3
-"""Simple HTTP runner that executes LifeHub automation commands."""
+"""Simple HTTP runner that executes LifeHub automation commands.
+
+Security note (2026-09-27): this server used to accept `Access-Control-
+Allow-Origin: *` and run allowlisted commands via `subprocess.run(command,
+shell=True)`. Because the dashboard's Content-Type is `application/json`,
+browsers preflight the POST -- so the wildcard origin meant ANY website the
+user had open in a tab could pass that preflight and trigger a real POST to
+this endpoint. Two allowlisted commands accept attacker-influenced argument
+text (`allowArguments: true`), which combined with `shell=True` was a
+straightforward shell-metacharacter command-injection RCE reachable from any
+webpage while this server happened to be running. This was already flagged
+in docs/SECURITY.md but never patched.
+
+Fixed by:
+- Only ever answering CORS preflight for requests whose Origin is absent,
+  "null" (what browsers send for file:// pages, which is how this dashboard
+  is normally opened), or an explicit http(s)://localhost|127.0.0.1[:port]
+  origin. Any other origin's preflight fails, so the browser never sends
+  the real POST.
+- Never invoking a shell. Every command, including the fixed "&&"-joined
+  allowlist entry, is split with shlex and executed as an argv list
+  (`shell=False`). Any shell metacharacters an attacker appends to an
+  allowArguments command are now just inert literal argument text, not
+  shell syntax -- there is no shell present to interpret them.
+"""
 from __future__ import annotations
 
 import json
+import re
+import shlex
 import subprocess
 from datetime import datetime, timezone
 from dataclasses import dataclass
@@ -16,6 +42,11 @@ HISTORY_FILE = LOG_DIR / "history.json"
 ALLOWED_COMMANDS_FILE = ROOT / "automation" / "allowed_commands.json"
 SERVER_HOST = "127.0.0.1"
 SERVER_PORT = 8766
+
+# Origins allowed to receive CORS headers (and therefore the only origins
+# whose preflight can succeed). "null" is what browsers send as the Origin
+# for file:// pages, which is how this dashboard is normally opened.
+_ALLOWED_LOCAL_ORIGIN = re.compile(r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$")
 
 
 @dataclass
@@ -76,14 +107,65 @@ def append_history(new_runs: list[dict[str, Any]]) -> None:
     write_history(history)
 
 
+def run_allowed_command(
+    matched: AllowedCommand, candidate: str, workdir: Path
+) -> tuple[int, str, str]:
+    """Run a matched allowlisted command with no shell involved.
+
+    For allowArguments commands, the attacker-influenced suffix is parsed
+    with shlex and appended as literal argv entries -- never concatenated
+    into a shell string, so shell metacharacters in it do nothing. The
+    fixed (non-parameterized) allowlist entries are pre-vetted strings, so
+    splitting a "&&"-joined entry into sequential shell=False steps (still
+    stopping at the first failure, like a real `&&`) is safe here: nothing
+    attacker-controlled ever reaches this branch.
+    """
+    if matched.allow_arguments:
+        suffix = candidate[len(matched.command) :].strip()
+        argv_steps = [shlex.split(matched.command) + (shlex.split(suffix) if suffix else [])]
+    else:
+        argv_steps = [shlex.split(step.strip()) for step in matched.command.split("&&")]
+
+    stdout_parts: list[str] = []
+    stderr_parts: list[str] = []
+    returncode = 0
+    for argv in argv_steps:
+        if not argv:
+            continue
+        result = subprocess.run(
+            argv,
+            shell=False,
+            cwd=workdir,
+            capture_output=True,
+            text=True,
+        )
+        stdout_parts.append(result.stdout)
+        stderr_parts.append(result.stderr)
+        returncode = result.returncode
+        if returncode != 0:
+            break
+    return returncode, "".join(stdout_parts), "".join(stderr_parts)
+
+
 class AutomationHandler(BaseHTTPRequestHandler):
     server_version = "LifeHubAutomation/1.0"
     allowed_commands = load_allowed_commands()
 
+    def _allowed_origin(self) -> str | None:
+        origin = self.headers.get("Origin")
+        if origin is None or origin == "null":
+            return "null"
+        if _ALLOWED_LOCAL_ORIGIN.match(origin):
+            return origin
+        return None
+
     def _set_headers(self, status: int = 200) -> None:
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "*")
+        allowed_origin = self._allowed_origin()
+        if allowed_origin is not None:
+            self.send_header("Access-Control-Allow-Origin", allowed_origin)
+            self.send_header("Vary", "Origin")
         self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
@@ -92,6 +174,10 @@ class AutomationHandler(BaseHTTPRequestHandler):
         self._set_headers(204)
 
     def do_POST(self) -> None:  # noqa: N802
+        if self._allowed_origin() is None:
+            self._set_headers(403)
+            self.wfile.write(b'{"error":"origin_not_allowed"}')
+            return
         if self.path.rstrip("/") != "/run":
             self._set_headers(404)
             self.wfile.write(b'{"error":"not_found"}')
@@ -111,7 +197,11 @@ class AutomationHandler(BaseHTTPRequestHandler):
             command = task.get("command")
             if not command:
                 continue
-            if not any(allowed.matches(command) for allowed in self.allowed_commands):
+            matched = next(
+                (allowed for allowed in self.allowed_commands if allowed.matches(command)),
+                None,
+            )
+            if matched is None:
                 runs.append(
                     {
                         "id": task.get("id"),
@@ -127,22 +217,20 @@ class AutomationHandler(BaseHTTPRequestHandler):
                 )
                 continue
             started = datetime.now(timezone.utc)
-            result = subprocess.run(
-                command,
-                shell=True,
-                cwd=workdir,
-                capture_output=True,
-                text=True,
-            )
+            try:
+                exit_code, stdout, stderr = run_allowed_command(matched, command, workdir)
+            except ValueError as exc:
+                # shlex.split raises ValueError on unbalanced quotes, etc.
+                exit_code, stdout, stderr = 126, "", f"Could not parse command: {exc}"
             finished = datetime.now(timezone.utc)
             runs.append(
                 {
                     "id": task.get("id"),
                     "label": task.get("label"),
                     "command": command,
-                    "exitCode": result.returncode,
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
+                    "exitCode": exit_code,
+                    "stdout": stdout,
+                    "stderr": stderr,
                     "startedAt": started.isoformat(),
                     "finishedAt": finished.isoformat(),
                     "durationMs": int((finished - started).total_seconds() * 1000),
