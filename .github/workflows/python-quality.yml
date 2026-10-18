@@ -1,18 +1,7 @@
 name: Python quality
 
 on:
-  pull_request:
-    paths:
-      - "scripts/**/*.py"
-      - "tests/**/*.py"
-      - ".github/workflows/python-quality.yml"
-  push:
-    branches:
-      - main
-    paths:
-      - "scripts/**/*.py"
-      - "tests/**/*.py"
-      - ".github/workflows/python-quality.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
