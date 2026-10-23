@@ -2643,3 +2643,16 @@ body.refreshing::after {
   }
 }
 }
+
+/* Phone controls must fit their panel without hiding actions off-screen. */
+@media (max-width: 640px) {
+  .control-actions, .toggle-chip { min-width: 0; max-width: 100%; flex-wrap: wrap; box-sizing: border-box; }
+  .custom-quick-row, .text-game-save-controls { grid-template-columns: minmax(0, 1fr); }
+  .custom-quick-row input, .custom-quick-row button { min-width: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
+  .npc-chat-row { flex-wrap: wrap; }
+  .npc-chat-row input { min-width: 0; flex-basis: 100%; }
+  .encounter-row { align-items: stretch; flex-direction: column; }
+  .encounter-controls { min-width: 0; grid-template-columns: minmax(0, 1fr) auto auto; }
+  .wellbeing-source { overflow-wrap: anywhere; }
+  .text-game-controls { flex-wrap: wrap; }
+}
