@@ -28,8 +28,8 @@
 - [x] Show active slot + last saved time near save controls; render errors/success as colored chips.
 - [x] Add optional autosave toggle (save to selected slot every turn or every N commands).
 - [x] Increase console max-height on desktop (e.g., 400px) while keeping internal scroll, and keep Send button in a “processing…” state while Pyodide runs.
-- [ ] Harden persistence: validate save payloads, expose a “reset slots” button, and consider iCloud/disk-backed saves to survive storage clears.
-- [ ] Share a single Pyodide instance between both games and preload via `setup_pyodide.py` for faster startup/offline use.
+- [ ] **TASK-00283** Harden persistence: validate save payloads, expose a “reset slots” button, and consider iCloud/disk-backed saves to survive storage clears.
+- [ ] **TASK-00284** Share a single Pyodide instance between both games and preload via `setup_pyodide.py` for faster startup/offline use.
 
 ## Fun Text Game 2025 Backlog
 - [x] 1. Add smarter unknown-command suggestions (typo/helpful alias hints instead of dead-end errors).
@@ -48,107 +48,107 @@
 - [x] Provide a helper command (npm/pnpm script or Makefile) that runs `python3 scripts/build_text_game_sources.py` automatically when text-game Python files change.
 - [x] Improve `scripts/generate_directory_indexes.py` output further with hero icons or thumbnails (especially for Media folders) instead of plain text lists.
 - [x] Create a real search/indexer pipeline (e.g., scheduled `rg`/`ripgrep` dumps into JSON) that Copilot and the command palette can tap into for “find invoices mentioning RACV”-style queries.
-- [ ] Add lint/tests for the Python helper scripts (stats, Welltory, recent-files, directory indexes) so regressions are caught by CI before shipping.
+- [ ] **TASK-00299** Add lint/tests for the Python helper scripts (stats, Welltory, recent-files, directory indexes) so regressions are caught by CI before shipping.
 - [x] Bundle a setup script that copies `directory.css` to every generated root (LifeHub + Downloads) automatically after running `generate_directory_indexes.py`.
 
 ## Misc
 - [x] Add instructions for running a lightweight HTTP server (so Pyodide + Downloads watcher work) and consider ship a script to launch it automatically.
 - [x] Hook Welltory summary generation into a recurring task/automation so `welltory-summary.json` stays fresh without manual CLI runs.
-- [ ] Explore exposing the embedded text games’ save slots to iCloud Drive or disk files so browser storage wipes don’t lose progress.
-- [ ] Implement voice-triggered dashboard actions (Siri/voice command hooks) for search, focus mode, automations, and quick-links.
-- [ ] Build an AI summariser that scans recent files per area and shows a “What changed this week” brief on the dashboard.
-- [ ] Create a unified notification center banner for overdue backups, stale downloads, unfiled Inbox items, and agenda conflicts.
-- [ ] Add a directory heatmap/visual overlay showing month-over-month growth vs. idle folders.
-- [ ] Ship a smart tag recommender in the triage board that suggests macOS tags based on filenames/content.
-- [ ] Upgrade Media directory indexes to gallery mode (previews, EXIF info, grouping by event/location).
-- [ ] Layer a time-block planner over the agenda widget to propose filing/automation slots during the week.
-- [ ] Add a one-click “export kit” that zips a chosen folder, hashes it, and copies it to Archive + backup drive.
-- [ ] Build a LifeHub health dashboard (storage usage, file counts, automation cadence) with sparkline cards.
-- [ ] Support collaboration mode that exports selected folders as read-only static sites for sharing with family/coworkers.
+- [ ] **TASK-00303** Explore exposing the embedded text games’ save slots to iCloud Drive or disk files so browser storage wipes don’t lose progress.
+- [ ] **TASK-00304** Implement voice-triggered dashboard actions (Siri/voice command hooks) for search, focus mode, automations, and quick-links.
+- [ ] **TASK-00305** Build an AI summariser that scans recent files per area and shows a “What changed this week” brief on the dashboard.
+- [ ] **TASK-00306** Create a unified notification center banner for overdue backups, stale downloads, unfiled Inbox items, and agenda conflicts.
+- [ ] **TASK-00307** Add a directory heatmap/visual overlay showing month-over-month growth vs. idle folders.
+- [ ] **TASK-00308** Ship a smart tag recommender in the triage board that suggests macOS tags based on filenames/content.
+- [ ] **TASK-00309** Upgrade Media directory indexes to gallery mode (previews, EXIF info, grouping by event/location).
+- [ ] **TASK-00310** Layer a time-block planner over the agenda widget to propose filing/automation slots during the week.
+- [ ] **TASK-00311** Add a one-click “export kit” that zips a chosen folder, hashes it, and copies it to Archive + backup drive.
+- [ ] **TASK-00312** Build a LifeHub health dashboard (storage usage, file counts, automation cadence) with sparkline cards.
+- [ ] **TASK-00313** Support collaboration mode that exports selected folders as read-only static sites for sharing with family/coworkers.
 
 ## Fun & Flavor
-- [ ] Daily text game world events with rotating buffs/affixes and an in-dashboard banner.
-- [ ] Micro-quests that map real chores to D&D prompts with streak bonuses.
-- [ ] Tavern Talk banter feed (JSON-driven) with rotating flavor lines and tips.
-- [ ] Dice roller + random tables (encounters/loot) with a tiny transcript log.
-- [ ] Achievement badges for dashboard actions (refreshes, zero Inbox, triage runs).
-- [ ] Hidden easter egg (e.g., Konami code) that swaps to “pixel mode” theme or plays an 8-bit sting.
-- [ ] Lore blurbs for areas/cards (Finance = guild treasury, etc.) shown in detail view.
-- [ ] Seasonal / playful theme skins (e.g., Synthwave, Retro Terminal, Studio Ghibli) with per-panel hover animations.
-- [ ] Subtle confetti or sparkle effect on milestones (Inbox zero, automation run, quest complete) with a toggle to disable.
-- [ ] Ambient sounds for key actions (save game, complete task, run automation) behind a “sound on/off” toggle.
-- [ ] Quick challenges/speed runs (e.g., file 5 inbox items against a timer) with personal bests.
-- [ ] Exportable “brag cards” (PNG) for achievements/stats with one-click copy/share.
-- [ ] Text-game unlocks that award cosmetic dashboard items (pills/gradients/icons) when certain in-game events occur.
-- [ ] Rotating NPC visitors (bard, quartermaster, archivist) offering daily quests, hints, or bonuses.
-- [ ] Weekly mystery thread/puzzle with hidden clues across panels; solving unlocks a cosmetic/shortcut.
-- [ ] “Portal” dungeon runs that temporarily reskin the dashboard into a map; clear rooms by completing chores.
-- [ ] “Codex of Curios” collectibles unlocked by actions (refresh, triage, backups) with lore snippets per panel.
-- [ ] Random encounters (merchant/imp) that offer choices and small perks (e.g., kiosk speed, badge backgrounds).
-- [ ] Timeline “story mode” skin that renders entries as journal snippets.
-- [ ] Dice-based daily modifiers (“+1 to filing speed” auto-enables focus mode) via a hidden roll button.
-- [ ] Adventure map under text games that fills tiles as you clear daily tasks.
-- [ ] Add NPC portraits (free/CC0 art) with per-theme framing and drop shadows; fallback to initials if offline.
-- [ ] Add accent illustrations/icons for panel headers (stored under `Resources/ui-icons/`) to reduce text density.
-- [ ] Hero background illustrations per theme for the top header (Modern/Classic/Contrast).
-- [ ] Sprinkle emoji/icon chips next to stats and checklist items for quick visual cues.
-- [ ] Badge gallery with colorful gradients/glyphs; surface 3 featured badges on the dashboard.
-- [ ] Pattern/gradient library applied to panels (alternating per column) for visual variety.
-- [ ] Subtle animated glow/halo on focus mode and kiosk controls for a more “alive” feel.
-- [ ] Gradient token system per area (Finance, Projects, Inbox) applied to pills/cards/quick links for grouping.
-- [ ] Animated stat meters (pulsing/striped/liquid fills) with micro-icons on the bar ends.
-- [ ] Glassy overlays with subtle noise/light borders for banners (NPC, quests).
-- [ ] Sticker packs: allow pinning stickers/emotes on panels; show a sticker strip per panel.
-- [ ] Dynamic moving backgrounds (radial gradients/low-poly) behind columns, with Calm mode dimmer.
-- [ ] Illustrated dividers between sections (line art/runes/waves) to break text density.
-- [ ] NPC avatar rings with rotating accent halo and status dot; theme-aware colors.
-- [ ] Inline sparklines beside stats/checklist counts using accent colors.
-- [ ] Celebratory corner toasts (icon + color burst) on quest completion or Inbox zero.
-- [ ] Hover-reveal icons/hints on panel headers with brief fade/slide animations.
-- [ ] Add sticker packs (pin emotes on panels + per-panel sticker strip).
-- [ ] Hover-reveal hints/icons on panel headers with small fade/slide animation.
-- [ ] Add inline sparklines next to stats/checklist counts.
-- [ ] Celebratory toasts for quests, backups fresh, downloads cleared (icon + color burst).
-- [ ] Badge gallery with 3 featured badges; unlocks via dashboard actions.
-- [ ] Loot drops from NPC quests that unlock cosmetic chips you can apply to panels.
-- [ ] Background confetti trail when switching themes/modes.
-- [ ] XP/leveling system that awards XP on dashboard interactions; visible level badge.
-- [ ] Character creation flow tied to Skill checks & saves (STR/DEX/CON/etc).
-- [ ] Race/class selector with dialogue box during character creation.
-- [ ] Map skill stats to dashboard actions (e.g., STR for backups, INT for automation).
-- [ ] Per-action XP values + combo multipliers for streaks (Inbox runs, backups, automations).
-- [ ] Level-up perks that unlock cosmetic themes, stickers, or badge slots.
-- [ ] Skill checks on dashboard actions (e.g., CHA check to "persuade" Copilot, STR check to archive).
-- [ ] Quest log panel that tracks XP rewards and progress bars.
-- [ ] Talent tree / feat picker (automation efficiency, search bonuses, kiosk perks).
-- [ ] Alignment/faction system that shifts with actions (Order/Chaos, Maker/Archivist) and tints UI.
-- [ ] Party system: assign NPC companions to panels for small buffs.
-- [ ] Rest/camp button that regenerates "energy" and triggers ambient music.
-- [ ] Loot table for dashboard actions (random cosmetic drops, sticker packs, badge fragments).
-- [ ] Boss/mini-boss events (e.g., "Inbox Dragon") with progress bar and XP reward on completion.
-- [ ] Seasonal events that grant double XP or unique cosmetics for a week.
-- [ ] Character sheet panel showing stats, level, perks, faction, and equipped cosmetics.
-- [ ] Add full 5e ability/skill proficiencies (STR/DEX/CON/INT/WIS/CHA) with bonuses/expertise.
-- [ ] Add conditions/status effects (blessed, exhausted, poisoned) that buff/nerf dashboard behaviors.
-- [ ] Add inspiration/Bardic Inspiration dice pool to spend on checks.
-- [ ] Short/long rest flows that reset abilities/buffs (kiosk boosts, automation surges).
-- [ ] Spell slot/charge model for powerful actions (bulk triage, automation bursts) with per-day limits.
-- [ ] Event-driven saving throws (backup failed → CON save, inbox overflow → WIS save, etc.).
-- [ ] Advantage/disadvantage mechanic for risky actions (roll 2d20 best/worst).
-- [ ] Background/traits/ideals/bonds/flaws that unlock perks or flavor hooks.
-- [ ] Equipment/attunement system for artifacts that grant passive bonuses; attunement cap.
-- [ ] Party/help actions from NPCs; simple initiative/turn order for encounters.
-- [ ] Downtime/crafting activities that tick over time (craft cosmetics, train skills).
-- [ ] Encounter tracker for recurring events (Inbox dragon, Downloads goblins).
-- [ ] Damage types/resistances mapped to dashboard events/alerts (fire/cold/psychic, etc.).
-- [ ] Forbidden Lands-style overworld map with hex travel and random events.
-- [ ] Build/upgrade a stronghold in a dashboard section; spend resources to add rooms/bonuses.
-- [ ] Resource economy (wood/stone/ore/food) earned from actions or hunts; spend to build.
-- [ ] Hunting/foraging mini-loop to gather food for stronghold workers.
-- [ ] Age-of-Empires-inspired conversion: turn XP/quests into resources for construction.
-- [ ] Stronghold upkeep/raids: periodic events that require resources or trigger encounters.
-- [ ] Map nodes tied to dashboard panels (e.g., Resurface = ruins, Inbox = village) with travel time.
-- [ ] Crafting bench in stronghold to create cosmetics/stickers/badges from resources.
+- [ ] **TASK-00314** Daily text game world events with rotating buffs/affixes and an in-dashboard banner.
+- [ ] **TASK-00315** Micro-quests that map real chores to D&D prompts with streak bonuses.
+- [ ] **TASK-00316** Tavern Talk banter feed (JSON-driven) with rotating flavor lines and tips.
+- [ ] **TASK-00317** Dice roller + random tables (encounters/loot) with a tiny transcript log.
+- [ ] **TASK-00318** Achievement badges for dashboard actions (refreshes, zero Inbox, triage runs).
+- [ ] **TASK-00319** Hidden easter egg (e.g., Konami code) that swaps to “pixel mode” theme or plays an 8-bit sting.
+- [ ] **TASK-00320** Lore blurbs for areas/cards (Finance = guild treasury, etc.) shown in detail view.
+- [ ] **TASK-00321** Seasonal / playful theme skins (e.g., Synthwave, Retro Terminal, Studio Ghibli) with per-panel hover animations.
+- [ ] **TASK-00322** Subtle confetti or sparkle effect on milestones (Inbox zero, automation run, quest complete) with a toggle to disable.
+- [ ] **TASK-00323** Ambient sounds for key actions (save game, complete task, run automation) behind a “sound on/off” toggle.
+- [ ] **TASK-00324** Quick challenges/speed runs (e.g., file 5 inbox items against a timer) with personal bests.
+- [ ] **TASK-00325** Exportable “brag cards” (PNG) for achievements/stats with one-click copy/share.
+- [ ] **TASK-00326** Text-game unlocks that award cosmetic dashboard items (pills/gradients/icons) when certain in-game events occur.
+- [ ] **TASK-00327** Rotating NPC visitors (bard, quartermaster, archivist) offering daily quests, hints, or bonuses.
+- [ ] **TASK-00328** Weekly mystery thread/puzzle with hidden clues across panels; solving unlocks a cosmetic/shortcut.
+- [ ] **TASK-00329** “Portal” dungeon runs that temporarily reskin the dashboard into a map; clear rooms by completing chores.
+- [ ] **TASK-00330** “Codex of Curios” collectibles unlocked by actions (refresh, triage, backups) with lore snippets per panel.
+- [ ] **TASK-00331** Random encounters (merchant/imp) that offer choices and small perks (e.g., kiosk speed, badge backgrounds).
+- [ ] **TASK-00332** Timeline “story mode” skin that renders entries as journal snippets.
+- [ ] **TASK-00333** Dice-based daily modifiers (“+1 to filing speed” auto-enables focus mode) via a hidden roll button.
+- [ ] **TASK-00334** Adventure map under text games that fills tiles as you clear daily tasks.
+- [ ] **TASK-00335** Add NPC portraits (free/CC0 art) with per-theme framing and drop shadows; fallback to initials if offline.
+- [ ] **TASK-00336** Add accent illustrations/icons for panel headers (stored under `Resources/ui-icons/`) to reduce text density.
+- [ ] **TASK-00337** Hero background illustrations per theme for the top header (Modern/Classic/Contrast).
+- [ ] **TASK-00338** Sprinkle emoji/icon chips next to stats and checklist items for quick visual cues.
+- [ ] **TASK-00339** Badge gallery with colorful gradients/glyphs; surface 3 featured badges on the dashboard.
+- [ ] **TASK-00340** Pattern/gradient library applied to panels (alternating per column) for visual variety.
+- [ ] **TASK-00341** Subtle animated glow/halo on focus mode and kiosk controls for a more “alive” feel.
+- [ ] **TASK-00342** Gradient token system per area (Finance, Projects, Inbox) applied to pills/cards/quick links for grouping.
+- [ ] **TASK-00343** Animated stat meters (pulsing/striped/liquid fills) with micro-icons on the bar ends.
+- [ ] **TASK-00344** Glassy overlays with subtle noise/light borders for banners (NPC, quests).
+- [ ] **TASK-00345** Sticker packs: allow pinning stickers/emotes on panels; show a sticker strip per panel.
+- [ ] **TASK-00346** Dynamic moving backgrounds (radial gradients/low-poly) behind columns, with Calm mode dimmer.
+- [ ] **TASK-00347** Illustrated dividers between sections (line art/runes/waves) to break text density.
+- [ ] **TASK-00348** NPC avatar rings with rotating accent halo and status dot; theme-aware colors.
+- [ ] **TASK-00349** Inline sparklines beside stats/checklist counts using accent colors.
+- [ ] **TASK-00350** Celebratory corner toasts (icon + color burst) on quest completion or Inbox zero.
+- [ ] **TASK-00351** Hover-reveal icons/hints on panel headers with brief fade/slide animations.
+- [ ] **TASK-00352** Add sticker packs (pin emotes on panels + per-panel sticker strip).
+- [ ] **TASK-00353** Hover-reveal hints/icons on panel headers with small fade/slide animation.
+- [ ] **TASK-00354** Add inline sparklines next to stats/checklist counts.
+- [ ] **TASK-00355** Celebratory toasts for quests, backups fresh, downloads cleared (icon + color burst).
+- [ ] **TASK-00356** Badge gallery with 3 featured badges; unlocks via dashboard actions.
+- [ ] **TASK-00357** Loot drops from NPC quests that unlock cosmetic chips you can apply to panels.
+- [ ] **TASK-00358** Background confetti trail when switching themes/modes.
+- [ ] **TASK-00359** XP/leveling system that awards XP on dashboard interactions; visible level badge.
+- [ ] **TASK-00360** Character creation flow tied to Skill checks & saves (STR/DEX/CON/etc).
+- [ ] **TASK-00361** Race/class selector with dialogue box during character creation.
+- [ ] **TASK-00362** Map skill stats to dashboard actions (e.g., STR for backups, INT for automation).
+- [ ] **TASK-00363** Per-action XP values + combo multipliers for streaks (Inbox runs, backups, automations).
+- [ ] **TASK-00364** Level-up perks that unlock cosmetic themes, stickers, or badge slots.
+- [ ] **TASK-00365** Skill checks on dashboard actions (e.g., CHA check to "persuade" Copilot, STR check to archive).
+- [ ] **TASK-00366** Quest log panel that tracks XP rewards and progress bars.
+- [ ] **TASK-00367** Talent tree / feat picker (automation efficiency, search bonuses, kiosk perks).
+- [ ] **TASK-00368** Alignment/faction system that shifts with actions (Order/Chaos, Maker/Archivist) and tints UI.
+- [ ] **TASK-00369** Party system: assign NPC companions to panels for small buffs.
+- [ ] **TASK-00370** Rest/camp button that regenerates "energy" and triggers ambient music.
+- [ ] **TASK-00371** Loot table for dashboard actions (random cosmetic drops, sticker packs, badge fragments).
+- [ ] **TASK-00372** Boss/mini-boss events (e.g., "Inbox Dragon") with progress bar and XP reward on completion.
+- [ ] **TASK-00373** Seasonal events that grant double XP or unique cosmetics for a week.
+- [ ] **TASK-00374** Character sheet panel showing stats, level, perks, faction, and equipped cosmetics.
+- [ ] **TASK-00375** Add full 5e ability/skill proficiencies (STR/DEX/CON/INT/WIS/CHA) with bonuses/expertise.
+- [ ] **TASK-00376** Add conditions/status effects (blessed, exhausted, poisoned) that buff/nerf dashboard behaviors.
+- [ ] **TASK-00377** Add inspiration/Bardic Inspiration dice pool to spend on checks.
+- [ ] **TASK-00378** Short/long rest flows that reset abilities/buffs (kiosk boosts, automation surges).
+- [ ] **TASK-00379** Spell slot/charge model for powerful actions (bulk triage, automation bursts) with per-day limits.
+- [ ] **TASK-00380** Event-driven saving throws (backup failed → CON save, inbox overflow → WIS save, etc.).
+- [ ] **TASK-00381** Advantage/disadvantage mechanic for risky actions (roll 2d20 best/worst).
+- [ ] **TASK-00382** Background/traits/ideals/bonds/flaws that unlock perks or flavor hooks.
+- [ ] **TASK-00383** Equipment/attunement system for artifacts that grant passive bonuses; attunement cap.
+- [ ] **TASK-00384** Party/help actions from NPCs; simple initiative/turn order for encounters.
+- [ ] **TASK-00385** Downtime/crafting activities that tick over time (craft cosmetics, train skills).
+- [ ] **TASK-00386** Encounter tracker for recurring events (Inbox dragon, Downloads goblins).
+- [ ] **TASK-00387** Damage types/resistances mapped to dashboard events/alerts (fire/cold/psychic, etc.).
+- [ ] **TASK-00388** Forbidden Lands-style overworld map with hex travel and random events.
+- [ ] **TASK-00389** Build/upgrade a stronghold in a dashboard section; spend resources to add rooms/bonuses.
+- [ ] **TASK-00390** Resource economy (wood/stone/ore/food) earned from actions or hunts; spend to build.
+- [ ] **TASK-00391** Hunting/foraging mini-loop to gather food for stronghold workers.
+- [ ] **TASK-00392** Age-of-Empires-inspired conversion: turn XP/quests into resources for construction.
+- [ ] **TASK-00393** Stronghold upkeep/raids: periodic events that require resources or trigger encounters.
+- [ ] **TASK-00394** Map nodes tied to dashboard panels (e.g., Resurface = ruins, Inbox = village) with travel time.
+- [ ] **TASK-00395** Crafting bench in stronghold to create cosmetics/stickers/badges from resources.
 
 ## Subtasks (for implementation)
 - Daily world events: event JSON table, banner UI, daily random buff/affix hook into text games.
@@ -224,11 +224,11 @@
 - Crafting bench: recipes for cosmetics/stickers/badges using resources; progress UI.
 
 # New D&D additions
-- [ ] Track consumables/loadout panel (potions/scrolls/rests tied to chores).
-- [ ] Rest system buttons (short/long) to refresh pools and reset encounter bars/log).
-- [ ] Condition/boon chips (Blessed/Hasted/Exhaustion) that auto-add bonuses/penalties to checks.
-- [ ] Quest hooks linked to real tasks (Inbox/Downloads/Backups) with XP rewards and flavor text.
-- [ ] Auto-import character sheet JSON/URL to prefill abilities, proficiency, skills.
-- [ ] Combat mini-loop: turn order roller + HP tracker for a few foes (Inbox dragon).
-- [ ] NPC quests grant XP + item rewards with claim button on NPC panel.
-- [ ] Inventory panel for character (weapons/armor/items) with attunement toggles and rarity badges.
+- [ ] **TASK-00396** Track consumables/loadout panel (potions/scrolls/rests tied to chores).
+- [ ] **TASK-00397** Rest system buttons (short/long) to refresh pools and reset encounter bars/log).
+- [ ] **TASK-00398** Condition/boon chips (Blessed/Hasted/Exhaustion) that auto-add bonuses/penalties to checks.
+- [ ] **TASK-00399** Quest hooks linked to real tasks (Inbox/Downloads/Backups) with XP rewards and flavor text.
+- [ ] **TASK-00400** Auto-import character sheet JSON/URL to prefill abilities, proficiency, skills.
+- [ ] **TASK-00401** Combat mini-loop: turn order roller + HP tracker for a few foes (Inbox dragon).
+- [ ] **TASK-00402** NPC quests grant XP + item rewards with claim button on NPC panel.
+- [ ] **TASK-00403** Inventory panel for character (weapons/armor/items) with attunement toggles and rarity badges.
